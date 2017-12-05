@@ -24,7 +24,7 @@ public class UsecaseAdapter extends RecyclerView.Adapter<UsecaseAdapter.MyViewHo
 
         public MyViewHolder(View view) {
             super(view);
-            description = (TextView) view.findViewById(R.id.tv_usecase);
+            description = view.findViewById(R.id.tv_usecase);
         }
     }
 
@@ -36,6 +36,12 @@ public class UsecaseAdapter extends RecyclerView.Adapter<UsecaseAdapter.MyViewHo
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_item, parent, false);
+
+        int height = parent.getMeasuredHeight() / 4;
+        int width = parent.getMeasuredWidth();
+
+        itemView.setLayoutParams(new RecyclerView.LayoutParams(width, height));
+
 
         return new MyViewHolder(itemView);
     }

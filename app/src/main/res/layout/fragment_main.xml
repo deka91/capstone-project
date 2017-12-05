@@ -4,9 +4,11 @@
     android:layout_height="match_parent"
     tools:context="de.udacity.dk.cleverdroid.ui.MainFragment">
 
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_cards"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" />
 
 </FrameLayout>

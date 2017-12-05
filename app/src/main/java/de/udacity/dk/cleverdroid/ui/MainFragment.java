@@ -31,7 +31,7 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main,
                 container, false);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_cards);
+        recyclerView = view.findViewById(R.id.recycler_cards);
         usecaseAdapter = new UsecaseAdapter(usecaseList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this.getContext());
         recyclerView.setLayoutManager(mLayoutManager);
