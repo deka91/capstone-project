@@ -19,11 +19,10 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // Create a new Fragment to be placed in the activity layout
-            MainFragment firstFragment = new MainFragment();
+            MainFragment mainFragment = new MainFragment();
 
             // Add the fragment to the 'fragment_container' FrameLayout
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, firstFragment).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mainFragment).commit();
         }
     }
 }

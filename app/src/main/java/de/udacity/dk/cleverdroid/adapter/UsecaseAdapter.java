@@ -1,5 +1,6 @@
 package de.udacity.dk.cleverdroid.adapter;
 
+import android.content.res.Configuration;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,18 +19,28 @@ import de.udacity.dk.cleverdroid.data.Usecase;
 public class UsecaseAdapter extends RecyclerView.Adapter<UsecaseAdapter.MyViewHolder> {
 
     private List<Usecase> usecaseList;
+    private RecyclerViewClickListener listener;
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView description;
+        private RecyclerViewClickListener listener;
 
-        public MyViewHolder(View view) {
+        public MyViewHolder(View view, RecyclerViewClickListener listener) {
             super(view);
             description = view.findViewById(R.id.tv_usecase);
+            this.listener = listener;
+            view.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            listener.onClick(view, getAdapterPosition());
         }
     }
 
-    public UsecaseAdapter(List<Usecase> usecaseList) {
+    public UsecaseAdapter(List<Usecase> usecaseList, RecyclerViewClickListener listener) {
         this.usecaseList = usecaseList;
+        this.listener = listener;
     }
 
     @Override
@@ -37,13 +48,19 @@ public class UsecaseAdapter extends RecyclerView.Adapter<UsecaseAdapter.MyViewHo
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_item, parent, false);
 
-        int height = parent.getMeasuredHeight() / 4;
-        int width = parent.getMeasuredWidth();
+        if (parent.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            int height = parent.getMeasuredHeight() / 4;
+            int width = parent.getMeasuredWidth();
 
-        itemView.setLayoutParams(new RecyclerView.LayoutParams(width, height));
+            itemView.setLayoutParams(new RecyclerView.LayoutParams(width, height));
+        } else {
+//            int height = parent.getMeasuredHeight() / 2;
+//            int width = parent.getMeasuredWidth();
+//
+//            itemView.setLayoutParams(new RecyclerView.LayoutParams(width, height));
+        }
 
-
-        return new MyViewHolder(itemView);
+        return new MyViewHolder(itemView, listener);
     }
 
     @Override
@@ -56,5 +73,6 @@ public class UsecaseAdapter extends RecyclerView.Adapter<UsecaseAdapter.MyViewHo
     public int getItemCount() {
         return usecaseList.size();
     }
+
 }
 
