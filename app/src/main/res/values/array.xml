@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="pref_progressArray">
+        <item>@string/pref_favorits</item>
+        <item>@string/pref_progress</item>
+    </string-array>
+
+    <string-array name="pref_progress_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="pref_empty_array" />
+</resources>
