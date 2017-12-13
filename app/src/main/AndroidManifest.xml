@@ -21,6 +21,14 @@
             android:name=".ui.AboutActivity"
             android:label="@string/title_activity_about"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <provider
+            android:name=".database.MyContentProvider"
+            android:authorities="de.udacity.dk.cleverdroid"
+            android:exported="true"
+            android:readPermission="true"
+            android:writePermission="true" />
+
     </application>
 
 </manifest>
