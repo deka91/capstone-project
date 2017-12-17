@@ -18,6 +18,7 @@ import de.udacity.dk.cleverdroid.R;
 import de.udacity.dk.cleverdroid.adapter.RecyclerViewClickListener;
 import de.udacity.dk.cleverdroid.adapter.UsecaseAdapter;
 import de.udacity.dk.cleverdroid.data.Usecase;
+import de.udacity.dk.cleverdroid.database.MyContentProvider;
 
 public class MainFragment extends Fragment {
 
@@ -39,20 +40,22 @@ public class MainFragment extends Fragment {
         RecyclerViewClickListener listener = new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
+                QuizFragment quizFragment = new QuizFragment();
+                Bundle bundle = new Bundle();
                 switch (position) {
                     case 0:
-                        QuizFragment quizFragment = new QuizFragment();
-
-                        getActivity().getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.fragment_container, quizFragment).addToBackStack(quizFragment.getClass().getName()).commit();
+                        bundle.putString(getString(R.string.key_usecase), MyContentProvider.ALL_QUESTIONS_URI.toString());
                         break;
                     case 1:
+                        bundle.putString(getString(R.string.key_usecase), MyContentProvider.WRONG_QUESTIONS_URI.toString());
                         break;
                     case 2:
-                        break;
-                    case 3:
+                        bundle.putString(getString(R.string.key_usecase), MyContentProvider.FAVORITE_QUESTIONS_URI.toString());
                         break;
                 }
+                quizFragment.setArguments(bundle);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, quizFragment).addToBackStack(quizFragment.getClass().getName()).commit();
 
             }
         };

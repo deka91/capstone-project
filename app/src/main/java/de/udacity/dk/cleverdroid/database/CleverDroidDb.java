@@ -6,7 +6,7 @@ import android.provider.BaseColumns;
  * Created by Deniz Kalem on 13.12.2017.
  */
 
-public class Tables {
+public class CleverDroidDb {
 
     public static final class QuestionColumns implements BaseColumns {
         public static final String TABLE = "Question";
@@ -18,5 +18,6 @@ public class Tables {
         public static final String CHOICE3 = "choice3";
         public static final String CHOICE4 = "choice4";
         public static final String ANSWER = "answer";
+        public static final String CORRECT = "correct";
     }
 }

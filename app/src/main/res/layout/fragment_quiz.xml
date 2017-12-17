@@ -59,6 +59,7 @@
                 android:visibility="gone">
 
                 <RadioGroup
+                    android:id="@+id/rg_singlechoice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -129,8 +130,11 @@
         android:id="@+id/tv_answer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/question_and_answers"
+        android:layout_above="@+id/bt_back"
         android:layout_centerHorizontal="true"
+        android:padding="16dp"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
         tools:text="This is the answer" />
 
     <Button

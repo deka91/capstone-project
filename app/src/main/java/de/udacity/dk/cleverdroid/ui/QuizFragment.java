@@ -2,7 +2,9 @@ package de.udacity.dk.cleverdroid.ui;
 
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,27 +12,31 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.udacity.dk.cleverdroid.R;
 import de.udacity.dk.cleverdroid.data.QuestionBank;
+import de.udacity.dk.cleverdroid.database.CleverDroidDb;
 import de.udacity.dk.cleverdroid.database.MyDatabaseHelper;
-
-import static de.udacity.dk.cleverdroid.database.MyContentProvider.ALL_QUESTIONS_URI;
 
 public class QuizFragment extends Fragment {
 
     private MyDatabaseHelper myDatabaseHelper;
     private QuestionBank questionBank = new QuestionBank();
+    private String correctAnswer;
     private int score;
     private int number = 0;
+    private int clickCounter = 0;
+    private Uri uri;
+    private boolean questionIsAnswered;
 
     @BindView(R.id.tv_question_number)
     TextView questionNumber;
@@ -59,6 +65,9 @@ public class QuizFragment extends Fragment {
     @BindView(R.id.cb_choice4)
     CheckBox multipleChoice4;
 
+    @BindView(R.id.rg_singlechoice)
+    RadioGroup radioGroupSingleChoice;
+
     @BindView(R.id.rb_choice1)
     RadioButton singleChoice1;
 
@@ -71,12 +80,6 @@ public class QuizFragment extends Fragment {
     @BindView(R.id.rb_choice4)
     RadioButton singleChoice4;
 
-    @BindView(R.id.bt_next)
-    Button next;
-
-    @BindView(R.id.bt_back)
-    Button back;
-
     public QuizFragment() {
 
     }
@@ -88,6 +91,12 @@ public class QuizFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_quiz, container, false);
         setHasOptionsMenu(true);
         ButterKnife.bind(this, view);
+
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            uri = Uri.parse(bundle.getString(getString(R.string.key_usecase)));
+        }
+
         new QuestionFetchTask().execute();
         return view;
     }
@@ -110,7 +119,7 @@ public class QuizFragment extends Fragment {
             ContentResolver resolver = getActivity().getContentResolver();
 
             // Call the query method on the resolver with the correct Uri from the contract class
-            Cursor cursor = resolver.query(ALL_QUESTIONS_URI,
+            Cursor cursor = resolver.query(uri,
                     null, "", null, null);
             return cursor;
         }
@@ -124,54 +133,142 @@ public class QuizFragment extends Fragment {
             myDatabaseHelper.setCursor(cursor);
             questionBank.initQuestions(myDatabaseHelper);
             updateQuestion();
-            updateScore(score);
         }
     }
 
     private void updateQuestion() {
 
-        if (number < questionBank.getLength()) {
+        if (number < questionBank.getLength() && number >= 0) {
             if (questionBank.getType(number) == 1) {
                 // Single Choice
-                multipleChoiceLayout.setVisibility(View.VISIBLE);
-                multipleChoice1.setText(questionBank.getChoice(number, 1));
-                multipleChoice2.setText(questionBank.getChoice(number, 2));
-                multipleChoice3.setText(questionBank.getChoice(number, 3));
-                multipleChoice4.setText(questionBank.getChoice(number, 4));
-            } else {
-                // Multiple Choice
                 singleChoiceLayout.setVisibility(View.VISIBLE);
                 singleChoice1.setText(questionBank.getChoice(number, 1));
                 singleChoice2.setText(questionBank.getChoice(number, 2));
                 singleChoice3.setText(questionBank.getChoice(number, 3));
                 singleChoice4.setText(questionBank.getChoice(number, 4));
+            } else {
+                // Multiple Choice
+                multipleChoiceLayout.setVisibility(View.VISIBLE);
+                multipleChoice1.setText(questionBank.getChoice(number, 1));
+                multipleChoice2.setText(questionBank.getChoice(number, 2));
+                multipleChoice3.setText(questionBank.getChoice(number, 3));
+                multipleChoice4.setText(questionBank.getChoice(number, 4));
             }
-
-            question.setText(questionBank.getQuestion(number));
-            answer.setText(questionBank.getCorrectAnswer(number));
-            number++;
             questionNumber.setText(getString(R.string.quiz_title) + " " + number + "/" + questionBank.getLength());
-        } else {
+            question.setText(questionBank.getQuestion(number));
+        } else if (number > 0) {
             // last question
-//            ResultFragment resultFragment = new ResultFragment();
-//
-//            getActivity().getSupportFragmentManager().beginTransaction()
-//                    .replace(R.id.fragment_container, resultFragment).addToBackStack(resultFragment.getClass().getName()).commit();
+            ResultFragment resultFragment = new ResultFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt(getString(R.string.key_score), score);
+            bundle.putInt(getString(R.string.key_questions_amount), questionBank.getLength());
+            resultFragment.setArguments(bundle);
+
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, resultFragment).addToBackStack(resultFragment.getClass().getName()).commit();
         }
     }
 
-    private void updateScore(int score) {
+    private void updateUserInterface() {
+        if (!questionIsAnswered) {
+            radioGroupSingleChoice.clearCheck();
+            for (int i = 0; i < radioGroupSingleChoice.getChildCount(); i++) {
+                radioGroupSingleChoice.getChildAt(i).setEnabled(true);
+            }
+            answer.setVisibility(View.INVISIBLE);
+        }
+        number++;
+        clickCounter = 0;
+        questionIsAnswered = false;
+    }
 
+    private void showAnswer(int type) {
+        String userAnswer = "";
+        if (number < questionBank.getLength()) {
+
+            switch (type) {
+                case 1:
+                    int checkedRadioButtonId = radioGroupSingleChoice.getCheckedRadioButtonId();
+
+                    switch (checkedRadioButtonId) {
+                        case R.id.rb_choice1:
+                            userAnswer = (String) singleChoice1.getText();
+                            break;
+                        case R.id.rb_choice2:
+                            userAnswer = (String) singleChoice2.getText();
+                            break;
+
+                        case R.id.rb_choice3:
+                            userAnswer = (String) singleChoice3.getText();
+                            break;
+
+                        case R.id.rb_choice4:
+                            userAnswer = (String) singleChoice4.getText();
+                            break;
+                    }
+
+                    for (int i = 0; i < radioGroupSingleChoice.getChildCount(); i++) {
+                        radioGroupSingleChoice.getChildAt(i).setEnabled(false);
+                    }
+                    break;
+
+                case 2:
+                    break;
+
+            }
+
+            correctAnswer = questionBank.getCorrectAnswer(number);
+            answer.setText(correctAnswer);
+            answer.setVisibility(View.VISIBLE);
+            ContentResolver resolver = getActivity().getContentResolver();
+            ContentValues values = new ContentValues();
+
+            if (correctAnswer.equals(userAnswer)) {
+                values.put(CleverDroidDb.QuestionColumns.CORRECT, 1);
+                int updateUserResult = resolver.update(uri,
+                        values, null, null);
+
+                answer.setBackgroundColor(getResources().getColor(R.color.correctBackground));
+                score = score + 1;
+            } else {
+                values.put(CleverDroidDb.QuestionColumns.CORRECT, 0);
+                int updateUserResult = resolver.update(uri,
+                        values, null, null);
+                answer.setBackgroundColor(getResources().getColor(R.color.wrongBackground));
+            }
+
+            clickCounter++;
+        }
     }
 
     @OnClick(R.id.bt_next)
     void nextQuestion(View view) {
-        updateQuestion();
+        // Singlechoice
+        if (clickCounter == 0 && !questionIsAnswered) {
+            if (questionBank.getType(number) == 1) {
+                if (radioGroupSingleChoice.getCheckedRadioButtonId() == -1) {
+                    Toast.makeText(getActivity(), "Please answer the question.", Toast.LENGTH_SHORT).show();
+                } else {
+                    showAnswer(1);
+                }
+
+            } else if (questionBank.getType(number) == 2) {
+                showAnswer(2);
+            }
+
+
+        } else {
+            updateUserInterface();
+            updateQuestion();
+        }
     }
 
     @OnClick(R.id.bt_back)
     void previousQuestion(View view) {
+        questionIsAnswered = true;
+        number = number - 1;
         updateQuestion();
+        showAnswer(questionBank.getType(number));
     }
 
 }

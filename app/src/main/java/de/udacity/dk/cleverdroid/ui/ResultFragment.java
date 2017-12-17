@@ -7,11 +7,17 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.udacity.dk.cleverdroid.R;
 
 public class ResultFragment extends Fragment {
 
+    @BindView(R.id.tv_score)
+    TextView score;
 
     public ResultFragment() {
         // Required empty public constructor
@@ -21,9 +27,19 @@ public class ResultFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_result, container, false);
         setHasOptionsMenu(true);
-        return inflater.inflate(R.layout.fragment_result, container, false);
+        ButterKnife.bind(this, view);
+
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            int userScore = bundle.getInt(getString(R.string.key_score));
+            int questionsAmount = bundle.getInt(getString(R.string.key_questions_amount));
+            score.setText(userScore + "/" + questionsAmount);
+        }
+
+
+        return view;
     }
 
     @Override
@@ -32,5 +48,10 @@ public class ResultFragment extends Fragment {
         menu.findItem(R.id.action_about).setVisible(false);
         super.onPrepareOptionsMenu(menu);
     }
+
+    @OnClick(R.id.bt_again)
+    void nextQuestion(View view) {
+    }
+
 
 }
