@@ -7,17 +7,19 @@
     tools:context="de.udacity.dk.cleverdroid.ui.QuizFragment">
 
     <TextView
-        android:id="@+id/tv_title"
+        android:id="@+id/tv_question_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:gravity="center"
-        android:text="@string/quiz_title" />
+        android:text="@string/quiz_title"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Title" />
 
     <android.support.v7.widget.CardView
+        android:id="@+id/question_and_answers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_title"
+        android:layout_below="@+id/tv_question_number"
         android:layout_centerInParent="true"
         android:layout_margin="16dp"
         android:elevation="@dimen/cardview_default_elevation"
@@ -31,13 +33,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:padding="16dp">
 
                 <TextView
                     android:id="@+id/tv_question"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="This is a question" />
+                    android:textStyle="bold"
+                    tools:question="This is a question" />
 
             </LinearLayout>
 
@@ -47,45 +51,87 @@
                 android:background="@android:color/darker_gray" />
 
             <LinearLayout
+                android:id="@+id/layout_singlechoice"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:visibility="gone">
 
                 <RadioGroup
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="invisible">
+                    android:layout_height="wrap_content">
 
                     <RadioButton
+                        android:id="@+id/rb_choice1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         tools:text="Android" />
 
                     <RadioButton
+                        android:id="@+id/rb_choice2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         tools:text="Android" />
 
                     <RadioButton
+                        android:id="@+id/rb_choice3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         tools:text="Android" />
 
                     <RadioButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="Android" />
-
-                    <RadioButton
+                        android:id="@+id/rb_choice4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         tools:text="Android" />
                 </RadioGroup>
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_multiplechoice"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:visibility="gone">
+
+                <CheckBox
+                    android:id="@+id/cb_choice1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Android" />
+
+                <CheckBox
+                    android:id="@+id/cb_choice2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Android" />
+
+                <CheckBox
+                    android:id="@+id/cb_choice3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Android" />
+
+                <CheckBox
+                    android:id="@+id/cb_choice4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Android" />
+            </LinearLayout>
+
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
 
+    <TextView
+        android:id="@+id/tv_answer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/question_and_answers"
+        android:layout_centerHorizontal="true"
+        tools:text="This is the answer" />
 
     <Button
         android:id="@+id/bt_back"
@@ -93,18 +139,18 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:onClick="previousQuestion"
         android:layout_alignParentStart="true"
+        android:onClick="previousQuestion"
         android:text="@string/quiz_back" />
 
     <Button
         android:id="@+id/bt_next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="nextQuestion"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:onClick="nextQuestion"
         android:text="@string/quiz_next" />
 
 </RelativeLayout>

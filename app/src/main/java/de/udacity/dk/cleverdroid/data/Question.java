@@ -5,17 +5,25 @@ package de.udacity.dk.cleverdroid.data;
  */
 
 public class Question {
-    private int id;
     private int type;
     private int favorite;
-    private String text;
+    private String question;
+    private String[] choice = new String[4];
+    private String answer;
 
-    public int getId() {
-        return id;
+    public Question() {
+
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public Question(int type, int favorite, String question, String[] choice, String answer) {
+        this.type = type;
+        this.favorite = favorite;
+        this.question = question;
+        this.choice[0] = choice[0];
+        this.choice[1] = choice[1];
+        this.choice[2] = choice[2];
+        this.choice[3] = choice[3];
+        this.answer = answer;
     }
 
     public int getType() {
@@ -34,11 +42,27 @@ public class Question {
         this.favorite = favorite;
     }
 
-    public String getText() {
-        return text;
+    public String getQuestion() {
+        return question;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setQuestion(String question) {
+        this.question = question;
+    }
+
+    public String getChoice(int i) {
+        return choice[i];
+    }
+
+    public void setChoice(int i, String choice) {
+        this.choice[i] = choice;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
     }
 }

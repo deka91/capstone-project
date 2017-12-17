@@ -12,13 +12,11 @@ public class Tables {
         public static final String TABLE = "Question";
         public static final String TYPE = "type";
         public static final String FAVORITE = "favorite";
-        public static final String TEXT = "question_text";
-    }
-
-    public static final class AnswerColumns implements BaseColumns {
-        public static final String TABLE = "Answer";
-        public static final String CORRECT = "correct";
-        public static final String QUESTION_ID = "question_id";
-        public static final String TEXT = "answer_text";
+        public static final String QUESTION = "question";
+        public static final String CHOICE1 = "choice1";
+        public static final String CHOICE2 = "choice2";
+        public static final String CHOICE3 = "choice3";
+        public static final String CHOICE4 = "choice4";
+        public static final String ANSWER = "answer";
     }
 }

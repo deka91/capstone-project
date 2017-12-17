@@ -53,7 +53,7 @@ public class MyContentProvider extends ContentProvider {
 
         switch (uriMatcher.match(uri)) {
             case ALL_QUESTIONS:
-                String query = "SELECT * FROM Question, Answer WHERE ";
+                String query = "SELECT * FROM " + Tables.QuestionColumns.TABLE;
                 cursor = db.rawQuery(query + selection, selectionArgs);
                 break;
             case WRONG_QUESTIONS:
