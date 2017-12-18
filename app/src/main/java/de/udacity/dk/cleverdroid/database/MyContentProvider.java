@@ -21,10 +21,14 @@ public class MyContentProvider extends ContentProvider {
     private static final int ALL_QUESTIONS = 1;
     private static final int WRONG_QUESTIONS = 2;
     private static final int FAVORITE_QUESTIONS = 3;
-    private static final String ALL_QUESTIONS_PATH = "all_questions";
+    private static final int QUESTION_WITH_ID = 4;
+    private static final String ALL_QUESTIONS_PATH = "questions";
     private static final String WRONG_QUESTIONS_PATH = "wrong_questions";
     private static final String FAVORITE_QUESTIONS_PATH = "favorite_questions";
+    private static final String QUESTION_WITH_ID_PATH = "questions/#";
     private static final String AUTHORITY = "de.udacity.dk.cleverdroid";
+    public static final Uri CONTENT_URI =
+            Uri.parse("content://" + AUTHORITY + "/questions");
     public static final Uri ALL_QUESTIONS_URI =
             Uri.parse("content://" + AUTHORITY + "/" + ALL_QUESTIONS_PATH);
     public static final Uri WRONG_QUESTIONS_URI =
@@ -38,6 +42,7 @@ public class MyContentProvider extends ContentProvider {
         uriMatcher.addURI(AUTHORITY, ALL_QUESTIONS_PATH, ALL_QUESTIONS);
         uriMatcher.addURI(AUTHORITY, WRONG_QUESTIONS_PATH, WRONG_QUESTIONS);
         uriMatcher.addURI(AUTHORITY, FAVORITE_QUESTIONS_PATH, FAVORITE_QUESTIONS);
+        uriMatcher.addURI(AUTHORITY, QUESTION_WITH_ID_PATH, QUESTION_WITH_ID);
     }
 
 
@@ -78,11 +83,13 @@ public class MyContentProvider extends ContentProvider {
     public String getType(@NonNull Uri uri) {
         switch (uriMatcher.match(uri)) {
             case ALL_QUESTIONS:
-                return "vnd.android.cursor.dir/vnd.de.udacity.dk.cleverdroid.all_questions";
+                return "vnd.android.cursor.dir/vnd.de.udacity.dk.cleverdroid.questions";
             case WRONG_QUESTIONS:
                 return "vnd.android.cursor.dir/vnd.de.udacity.dk.cleverdroid.wrong_questions";
             case FAVORITE_QUESTIONS:
                 return "vnd.android.cursor.dir/vnd.de.udacity.dk.cleverdroid.favorite_questions";
+            case QUESTION_WITH_ID:
+                return "vnd.android.cursor.item/vnd.de.udacity.dk.cleverdroid.questions";
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -104,10 +111,8 @@ public class MyContentProvider extends ContentProvider {
     public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String selection, @Nullable String[] selectionArgs) {
         SQLiteDatabase db = myDatabaseHelper.getWritableDatabase();
         switch (uriMatcher.match(uri)) {
-            case ALL_QUESTIONS:
-            case WRONG_QUESTIONS:
-            case FAVORITE_QUESTIONS:
-                String id = uri.getPathSegments().get(0);
+            case QUESTION_WITH_ID:
+                String id = uri.getPathSegments().get(1);
                 selection = CleverDroidDb.QuestionColumns._ID + "=" + id
                         + (!TextUtils.isEmpty(selection) ?
                         " AND (" + selection + ')' : "");

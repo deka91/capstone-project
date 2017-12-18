@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -25,6 +26,7 @@ import butterknife.OnClick;
 import de.udacity.dk.cleverdroid.R;
 import de.udacity.dk.cleverdroid.data.QuestionBank;
 import de.udacity.dk.cleverdroid.database.CleverDroidDb;
+import de.udacity.dk.cleverdroid.database.MyContentProvider;
 import de.udacity.dk.cleverdroid.database.MyDatabaseHelper;
 
 public class QuizFragment extends Fragment {
@@ -35,7 +37,7 @@ public class QuizFragment extends Fragment {
     private int score;
     private int number = 0;
     private int clickCounter = 0;
-    private Uri uri;
+    String uriString;
     private boolean questionIsAnswered;
 
     @BindView(R.id.tv_question_number)
@@ -94,7 +96,7 @@ public class QuizFragment extends Fragment {
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            uri = Uri.parse(bundle.getString(getString(R.string.key_usecase)));
+            uriString = bundle.getString(getString(R.string.key_usecase));
         }
 
         new QuestionFetchTask().execute();
@@ -108,6 +110,12 @@ public class QuizFragment extends Fragment {
         super.onPrepareOptionsMenu(menu);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.quiz_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
     public class QuestionFetchTask extends AsyncTask<Void, Void, Cursor> {
 
         // Invoked on a background thread
@@ -119,8 +127,16 @@ public class QuizFragment extends Fragment {
             ContentResolver resolver = getActivity().getContentResolver();
 
             // Call the query method on the resolver with the correct Uri from the contract class
+            Uri uri = Uri.parse(uriString);
+            String selection = "";
+            if (MyContentProvider.WRONG_QUESTIONS_URI.toString().equals(uriString)) {
+                selection = "correct = 0";
+            } else if (MyContentProvider.WRONG_QUESTIONS_URI.toString().equals(uriString)) {
+                selection = "favorite = 1";
+            }
+
             Cursor cursor = resolver.query(uri,
-                    null, "", null, null);
+                    null, selection, null, null);
             return cursor;
         }
 
@@ -225,17 +241,18 @@ public class QuizFragment extends Fragment {
 
             if (correctAnswer.equals(userAnswer)) {
                 values.put(CleverDroidDb.QuestionColumns.CORRECT, 1);
-                int updateUserResult = resolver.update(uri,
-                        values, null, null);
-
                 answer.setBackgroundColor(getResources().getColor(R.color.correctBackground));
                 score = score + 1;
             } else {
                 values.put(CleverDroidDb.QuestionColumns.CORRECT, 0);
-                int updateUserResult = resolver.update(uri,
-                        values, null, null);
                 answer.setBackgroundColor(getResources().getColor(R.color.wrongBackground));
             }
+
+            Uri uri = Uri.parse(MyContentProvider.CONTENT_URI + "/" + number);
+
+            int updateUserResult = resolver.update(uri,
+                    values, null, null);
+
 
             clickCounter++;
         }
