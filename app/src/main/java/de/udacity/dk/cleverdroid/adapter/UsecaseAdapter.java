@@ -10,7 +10,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import de.udacity.dk.cleverdroid.R;
-import de.udacity.dk.cleverdroid.data.Usecase;
 
 /**
  * Created by Deniz Kalem on 03.12.2017.
@@ -18,7 +17,7 @@ import de.udacity.dk.cleverdroid.data.Usecase;
 
 public class UsecaseAdapter extends RecyclerView.Adapter<UsecaseAdapter.MyViewHolder> {
 
-    private List<Usecase> usecaseList;
+    private List<String> usecaseList;
     private RecyclerViewClickListener listener;
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -38,7 +37,7 @@ public class UsecaseAdapter extends RecyclerView.Adapter<UsecaseAdapter.MyViewHo
         }
     }
 
-    public UsecaseAdapter(List<Usecase> usecaseList, RecyclerViewClickListener listener) {
+    public UsecaseAdapter(List<String> usecaseList, RecyclerViewClickListener listener) {
         this.usecaseList = usecaseList;
         this.listener = listener;
     }
@@ -65,8 +64,8 @@ public class UsecaseAdapter extends RecyclerView.Adapter<UsecaseAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        Usecase usecase = usecaseList.get(position);
-        holder.description.setText(usecase.getDescription());
+        String usecase = usecaseList.get(position);
+        holder.description.setText(usecase);
     }
 
     @Override

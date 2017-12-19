@@ -2,6 +2,7 @@ package de.udacity.dk.cleverdroid.ui;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -12,21 +13,25 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import de.udacity.dk.cleverdroid.R;
 import de.udacity.dk.cleverdroid.adapter.RecyclerViewClickListener;
 import de.udacity.dk.cleverdroid.adapter.UsecaseAdapter;
-import de.udacity.dk.cleverdroid.data.Usecase;
 import de.udacity.dk.cleverdroid.database.MyContentProvider;
 
 public class MainFragment extends Fragment {
 
-    private List<Usecase> usecaseList = new ArrayList<>();
+    private ArrayList<String> usecaseList = new ArrayList<>();
     private UsecaseAdapter usecaseAdapter;
     private RecyclerView recyclerView;
 
     public MainFragment() {
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        prepareUsecaseData();
     }
 
     @Override
@@ -71,21 +76,22 @@ public class MainFragment extends Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(usecaseAdapter);
 
-        prepareUsecaseData();
+        usecaseAdapter.notifyDataSetChanged();
 
         return view;
     }
 
-    private void prepareUsecaseData() {
-        Usecase usecase = new Usecase(getString(R.string.main_start));
-        usecaseList.add(usecase);
-        usecase = new Usecase(getString(R.string.main_repeat));
-        usecaseList.add(usecase);
-        usecase = new Usecase(getString(R.string.main_favorites));
-        usecaseList.add(usecase);
-        usecase = new Usecase(getString(R.string.main_score));
-        usecaseList.add(usecase);
 
-        usecaseAdapter.notifyDataSetChanged();
+    private void prepareUsecaseData() {
+        String usecase = getString(R.string.main_start);
+        usecaseList.add(usecase);
+        usecase = getString(R.string.main_repeat);
+        usecaseList.add(usecase);
+        usecase = (getString(R.string.main_favorites));
+        usecaseList.add(usecase);
+        usecase = (getString(R.string.main_score));
+        usecaseList.add(usecase);
     }
+
+
 }
