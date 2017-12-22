@@ -18,15 +18,19 @@ public class MyContentProvider extends ContentProvider {
 
     private MyDatabaseHelper myDatabaseHelper;
     private static final UriMatcher uriMatcher;
+
     private static final int ALL_QUESTIONS = 1;
     private static final int WRONG_QUESTIONS = 2;
     private static final int FAVORITE_QUESTIONS = 3;
     private static final int QUESTION_WITH_ID = 4;
+
     private static final String ALL_QUESTIONS_PATH = "questions";
     private static final String WRONG_QUESTIONS_PATH = "wrong_questions";
     private static final String FAVORITE_QUESTIONS_PATH = "favorite_questions";
     private static final String QUESTION_WITH_ID_PATH = "questions/#";
+
     private static final String AUTHORITY = "de.udacity.dk.cleverdroid";
+
     public static final Uri CONTENT_URI =
             Uri.parse("content://" + AUTHORITY + "/questions");
     public static final Uri ALL_QUESTIONS_URI =
@@ -35,6 +39,7 @@ public class MyContentProvider extends ContentProvider {
             Uri.parse("content://" + AUTHORITY + "/" + WRONG_QUESTIONS_PATH);
     public static final Uri FAVORITE_QUESTIONS_URI =
             Uri.parse("content://" + AUTHORITY + "/" + FAVORITE_QUESTIONS_PATH);
+
     private Cursor cursor;
 
     static {
@@ -103,10 +108,11 @@ public class MyContentProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
+    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
         return 0;
     }
 
+    //FIXME
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String selection, @Nullable String[] selectionArgs) {
         SQLiteDatabase db = myDatabaseHelper.getWritableDatabase();
@@ -117,9 +123,20 @@ public class MyContentProvider extends ContentProvider {
                         + (!TextUtils.isEmpty(selection) ?
                         " AND (" + selection + ')' : "");
                 break;
+            case WRONG_QUESTIONS:
+//                selection =
+//                        (!TextUtils.isEmpty(selection) ?
+//                                " AND (" + "correct = 0" + ')' : "");
+                break;
+            case FAVORITE_QUESTIONS:
+                // UPDATE Question SET favorite=0
+//                selection = (!TextUtils.isEmpty(selection) ?
+//                        " AND (" + "favorite = 0" + ')' : "");
+                break;
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
         }
+
         int updateCount = db.update(CleverDroidDb.QuestionColumns.TABLE, contentValues, selection, selectionArgs);
         getContext().getContentResolver().notifyChange(uri, null);
         return updateCount;

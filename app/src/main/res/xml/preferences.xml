@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <MultiSelectListPreference
-        android:defaultValue="@array/pref_empty_array"
-        android:dialogTitle="@string/pref_reset_dialog_title"
-        android:entries="@array/pref_progressArray"
-        android:entryValues="@array/pref_progress_values"
+    <Preference
         android:key="progress"
-        android:summary="@string/pref_reset_summary"
-        android:title="@string/pref_reset_title" />
+        android:title="@string/pref_clear_progress" />
+    <Preference
+        android:key="favorites"
+        android:title="@string/pref_clear_favorites" />
 </PreferenceScreen>

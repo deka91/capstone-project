@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -37,7 +38,8 @@ public class QuizFragment extends Fragment {
     private int score;
     private int number = 0;
     private int clickCounter = 0;
-    String uriString;
+    private String uriString;
+    private MenuItem favorite;
     private boolean questionIsAnswered;
 
     @BindView(R.id.tv_question_number)
@@ -86,7 +88,6 @@ public class QuizFragment extends Fragment {
 
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -100,6 +101,7 @@ public class QuizFragment extends Fragment {
         }
 
         new QuestionFetchTask().execute();
+
         return view;
     }
 
@@ -114,6 +116,15 @@ public class QuizFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.quiz_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
+
+        favorite = menu.findItem(R.id.action_favorite);
+        favorite.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                addToFavorites();
+                return true;
+            }
+        });
     }
 
     public class QuestionFetchTask extends AsyncTask<Void, Void, Cursor> {
@@ -131,7 +142,7 @@ public class QuizFragment extends Fragment {
             String selection = "";
             if (MyContentProvider.WRONG_QUESTIONS_URI.toString().equals(uriString)) {
                 selection = "correct = 0";
-            } else if (MyContentProvider.WRONG_QUESTIONS_URI.toString().equals(uriString)) {
+            } else if (MyContentProvider.FAVORITE_QUESTIONS_URI.toString().equals(uriString)) {
                 selection = "favorite = 1";
             }
 
@@ -152,8 +163,16 @@ public class QuizFragment extends Fragment {
         }
     }
 
-    private void updateQuestion() {
+    private void checkIfQuestionIsInFavorites() {
+        if (questionBank.getFavorite(number) == 1) {
+            favorite.setIcon(R.drawable.ic_star_black_24dp);
+        } else {
+            favorite.setIcon(R.drawable
+                    .ic_star_border_black_24dp);
+        }
+    }
 
+    private void updateQuestion() {
         if (number < questionBank.getLength() && number >= 0) {
             if (questionBank.getType(number) == 1) {
                 // Single Choice
@@ -170,8 +189,10 @@ public class QuizFragment extends Fragment {
                 multipleChoice3.setText(questionBank.getChoice(number, 3));
                 multipleChoice4.setText(questionBank.getChoice(number, 4));
             }
-            questionNumber.setText(getString(R.string.quiz_title) + " " + number + "/" + questionBank.getLength());
+            int realQuestionNumber = number + 1;
+            questionNumber.setText(getString(R.string.quiz_title) + " " + realQuestionNumber + "/" + questionBank.getLength());
             question.setText(questionBank.getQuestion(number));
+            checkIfQuestionIsInFavorites();
         } else if (number > 0) {
             // last question
             ResultFragment resultFragment = new ResultFragment();
@@ -181,7 +202,7 @@ public class QuizFragment extends Fragment {
             resultFragment.setArguments(bundle);
 
             getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, resultFragment).addToBackStack(resultFragment.getClass().getName()).commit();
+                    .replace(R.id.fragment_container, resultFragment).commit();
         }
     }
 
@@ -201,7 +222,6 @@ public class QuizFragment extends Fragment {
     private void showAnswer(int type) {
         String userAnswer = "";
         if (number < questionBank.getLength()) {
-
             switch (type) {
                 case 1:
                     int checkedRadioButtonId = radioGroupSingleChoice.getCheckedRadioButtonId();
@@ -250,9 +270,8 @@ public class QuizFragment extends Fragment {
 
             Uri uri = Uri.parse(MyContentProvider.CONTENT_URI + "/" + number);
 
-            int updateUserResult = resolver.update(uri,
+            resolver.update(uri,
                     values, null, null);
-
 
             clickCounter++;
         }
@@ -287,5 +306,63 @@ public class QuizFragment extends Fragment {
         updateQuestion();
         showAnswer(questionBank.getType(number));
     }
+
+    private void addToFavorites() {
+        new AsyncTask<Void, Void, Integer>() {
+
+            @Override
+            protected Integer doInBackground(Void... params) {
+                return questionBank.getFavorite(number);
+            }
+
+            @Override
+            protected void onPostExecute(Integer isInFavorites) {
+                if (isInFavorites == 1) {
+                    new AsyncTask<Void, Void, Integer>() {
+                        @Override
+                        protected Integer doInBackground(Void... params) {
+                            ContentValues values = new ContentValues();
+                            values.put(CleverDroidDb.QuestionColumns.FAVORITE, 0);
+
+                            Uri uri = Uri.parse(MyContentProvider.CONTENT_URI + "/" + number);
+
+                            return getActivity().getContentResolver().update
+                                    (uri,
+                                            values, null, null);
+                        }
+
+                        @Override
+                        protected void onPostExecute(Integer rowsDeleted) {
+                            favorite.setIcon(R.drawable
+                                    .ic_star_border_black_24dp);
+                        }
+                    }.execute();
+                } else {
+                    // adding to favorites
+                    new AsyncTask<Void, Void, Integer>() {
+                        @Override
+                        protected Integer doInBackground(Void... params) {
+                            ContentValues values = new ContentValues();
+                            values.put(CleverDroidDb.QuestionColumns.FAVORITE, 1);
+
+                            Uri uri = Uri.parse(MyContentProvider.CONTENT_URI + "/" + number);
+
+                            return getActivity().getContentResolver().update
+                                    (uri,
+                                            values, null, null);
+                        }
+
+                        @Override
+                        protected void onPostExecute(Integer returnUri) {
+                            favorite.setIcon(R.drawable
+                                    .ic_star_black_24dp);
+                        }
+                    }.execute();
+                }
+            }
+        }.execute();
+
+    }
+
 
 }

@@ -50,7 +50,8 @@ public class ResultFragment extends Fragment {
     }
 
     @OnClick(R.id.bt_again)
-    void nextQuestion(View view) {
+    void repeateQuestions(View view) {
+        getFragmentManager().findFragmentByTag("yourstringtag");
     }
 
 
