@@ -15,13 +15,13 @@ import de.udacity.dk.cleverdroid.data.Question;
  * Created by Deniz Kalem on 12.12.2017.
  */
 
-public class MyDatabaseHelper extends SQLiteAssetHelper {
+public class QuestionDbHelper extends SQLiteAssetHelper {
 
     private static final String DATABASE_NAME = "cleverdroid.db";
     private static final int DATABASE_VERSION = 1;
     private Cursor cursor;
 
-    public MyDatabaseHelper(Context context) {
+    public QuestionDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -33,28 +33,28 @@ public class MyDatabaseHelper extends SQLiteAssetHelper {
             do {
                 Question question = new Question();
 
-                int type = cursor.getInt(cursor.getColumnIndex(CleverDroidDb.QuestionColumns.TYPE));
+                int type = cursor.getInt(cursor.getColumnIndex(QuestionContract.QuestionColumns.TYPE));
                 question.setType(type);
 
-                int favorite = cursor.getInt(cursor.getColumnIndex(CleverDroidDb.QuestionColumns.FAVORITE));
+                int favorite = cursor.getInt(cursor.getColumnIndex(QuestionContract.QuestionColumns.FAVORITE));
                 question.setFavorite(favorite);
 
-                String questionText = cursor.getString(cursor.getColumnIndex(CleverDroidDb.QuestionColumns.QUESTION));
+                String questionText = cursor.getString(cursor.getColumnIndex(QuestionContract.QuestionColumns.QUESTION));
                 question.setQuestion(questionText);
 
-                String choice1Text = cursor.getString(cursor.getColumnIndex(CleverDroidDb.QuestionColumns.CHOICE1));
+                String choice1Text = cursor.getString(cursor.getColumnIndex(QuestionContract.QuestionColumns.CHOICE1));
                 question.setChoice(0, choice1Text);
 
-                String choice2Text = cursor.getString(cursor.getColumnIndex(CleverDroidDb.QuestionColumns.CHOICE2));
+                String choice2Text = cursor.getString(cursor.getColumnIndex(QuestionContract.QuestionColumns.CHOICE2));
                 question.setChoice(1, choice2Text);
 
-                String choice3Text = cursor.getString(cursor.getColumnIndex(CleverDroidDb.QuestionColumns.CHOICE3));
+                String choice3Text = cursor.getString(cursor.getColumnIndex(QuestionContract.QuestionColumns.CHOICE3));
                 question.setChoice(2, choice3Text);
 
-                String choice4Text = cursor.getString(cursor.getColumnIndex(CleverDroidDb.QuestionColumns.CHOICE4));
+                String choice4Text = cursor.getString(cursor.getColumnIndex(QuestionContract.QuestionColumns.CHOICE4));
                 question.setChoice(3, choice4Text);
 
-                String answerText = cursor.getString(cursor.getColumnIndex(CleverDroidDb.QuestionColumns.ANSWER));
+                String answerText = cursor.getString(cursor.getColumnIndex(QuestionContract.QuestionColumns.ANSWER));
                 question.setAnswer(answerText);
 
                 questions.add(question);

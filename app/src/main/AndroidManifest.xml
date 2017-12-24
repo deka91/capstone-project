@@ -23,7 +23,7 @@
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <provider
-            android:name=".database.MyContentProvider"
+            android:name=".database.QuestionContentProvider"
             android:authorities="de.udacity.dk.cleverdroid"
             android:exported="true"
             android:readPermission="true"

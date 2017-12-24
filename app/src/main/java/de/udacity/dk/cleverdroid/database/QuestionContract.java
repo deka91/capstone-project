@@ -6,7 +6,7 @@ import android.provider.BaseColumns;
  * Created by Deniz Kalem on 13.12.2017.
  */
 
-public class CleverDroidDb {
+public class QuestionContract {
 
     public static final class QuestionColumns implements BaseColumns {
         public static final String TABLE = "Question";

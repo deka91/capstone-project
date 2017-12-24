@@ -3,7 +3,7 @@ package de.udacity.dk.cleverdroid.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.udacity.dk.cleverdroid.database.MyDatabaseHelper;
+import de.udacity.dk.cleverdroid.database.QuestionDbHelper;
 
 /**
  * Created by Deniz Kalem on 16.12.2017.
@@ -12,7 +12,7 @@ import de.udacity.dk.cleverdroid.database.MyDatabaseHelper;
 public class QuestionBank {
 
     List<Question> questions = new ArrayList<>();
-    MyDatabaseHelper myDatabaseHelper;
+    QuestionDbHelper questionDbHelper;
 
     public int getFavorite(int i) {
         return questions.get(i).getFavorite();
@@ -38,8 +38,8 @@ public class QuestionBank {
         return questions.get(i).getAnswer();
     }
 
-    public void initQuestions(MyDatabaseHelper myDatabaseHelper) {
-        questions = myDatabaseHelper.getAllQuestions();
+    public void initQuestions(QuestionDbHelper questionDbHelper) {
+        questions = questionDbHelper.getAllQuestions();
     }
 
 

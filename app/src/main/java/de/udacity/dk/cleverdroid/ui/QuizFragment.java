@@ -26,13 +26,15 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.udacity.dk.cleverdroid.R;
 import de.udacity.dk.cleverdroid.data.QuestionBank;
-import de.udacity.dk.cleverdroid.database.CleverDroidDb;
-import de.udacity.dk.cleverdroid.database.MyContentProvider;
-import de.udacity.dk.cleverdroid.database.MyDatabaseHelper;
+import de.udacity.dk.cleverdroid.database.QuestionContentProvider;
+import de.udacity.dk.cleverdroid.database.QuestionContract;
+import de.udacity.dk.cleverdroid.database.QuestionDbHelper;
 
 public class QuizFragment extends Fragment {
 
-    private MyDatabaseHelper myDatabaseHelper;
+    public static final String TAG = QuizFragment.class.getSimpleName();
+    private static final int LOADER_ID = 0x01;
+    private QuestionDbHelper questionDbHelper;
     private QuestionBank questionBank = new QuestionBank();
     private String correctAnswer;
     private int score;
@@ -100,6 +102,7 @@ public class QuizFragment extends Fragment {
             uriString = bundle.getString(getString(R.string.key_usecase));
         }
 
+//        getActivity().getSupportLoaderManager().initLoader(LOADER_ID, null, this);
         new QuestionFetchTask().execute();
 
         return view;
@@ -140,9 +143,9 @@ public class QuizFragment extends Fragment {
             // Call the query method on the resolver with the correct Uri from the contract class
             Uri uri = Uri.parse(uriString);
             String selection = "";
-            if (MyContentProvider.WRONG_QUESTIONS_URI.toString().equals(uriString)) {
+            if (QuestionContentProvider.URI_QUESTIONS_WRONG.toString().equals(uriString)) {
                 selection = "correct = 0";
-            } else if (MyContentProvider.FAVORITE_QUESTIONS_URI.toString().equals(uriString)) {
+            } else if (QuestionContentProvider.URI_QUESTIONS_FAVORITE.toString().equals(uriString)) {
                 selection = "favorite = 1";
             }
 
@@ -156,9 +159,9 @@ public class QuizFragment extends Fragment {
         @Override
         protected void onPostExecute(Cursor cursor) {
             super.onPostExecute(cursor);
-            myDatabaseHelper = new MyDatabaseHelper(getContext());
-            myDatabaseHelper.setCursor(cursor);
-            questionBank.initQuestions(myDatabaseHelper);
+            questionDbHelper = new QuestionDbHelper(getContext());
+            questionDbHelper.setCursor(cursor);
+            questionBank.initQuestions(questionDbHelper);
             updateQuestion();
         }
     }
@@ -199,6 +202,7 @@ public class QuizFragment extends Fragment {
             Bundle bundle = new Bundle();
             bundle.putInt(getString(R.string.key_score), score);
             bundle.putInt(getString(R.string.key_questions_amount), questionBank.getLength());
+            bundle.putString("uri", uriString);
             resultFragment.setArguments(bundle);
 
             getActivity().getSupportFragmentManager().beginTransaction()
@@ -260,15 +264,15 @@ public class QuizFragment extends Fragment {
             ContentValues values = new ContentValues();
 
             if (correctAnswer.equals(userAnswer)) {
-                values.put(CleverDroidDb.QuestionColumns.CORRECT, 1);
+                values.put(QuestionContract.QuestionColumns.CORRECT, 1);
                 answer.setBackgroundColor(getResources().getColor(R.color.correctBackground));
                 score = score + 1;
             } else {
-                values.put(CleverDroidDb.QuestionColumns.CORRECT, 0);
+                values.put(QuestionContract.QuestionColumns.CORRECT, 0);
                 answer.setBackgroundColor(getResources().getColor(R.color.wrongBackground));
             }
 
-            Uri uri = Uri.parse(MyContentProvider.CONTENT_URI + "/" + number);
+            Uri uri = Uri.parse(QuestionContentProvider.URI_QUESTIONS + "/" + number);
 
             resolver.update(uri,
                     values, null, null);
@@ -322,9 +326,9 @@ public class QuizFragment extends Fragment {
                         @Override
                         protected Integer doInBackground(Void... params) {
                             ContentValues values = new ContentValues();
-                            values.put(CleverDroidDb.QuestionColumns.FAVORITE, 0);
+                            values.put(QuestionContract.QuestionColumns.FAVORITE, 0);
 
-                            Uri uri = Uri.parse(MyContentProvider.CONTENT_URI + "/" + number);
+                            Uri uri = Uri.parse(QuestionContentProvider.URI_QUESTIONS + "/" + number);
 
                             return getActivity().getContentResolver().update
                                     (uri,
@@ -343,9 +347,9 @@ public class QuizFragment extends Fragment {
                         @Override
                         protected Integer doInBackground(Void... params) {
                             ContentValues values = new ContentValues();
-                            values.put(CleverDroidDb.QuestionColumns.FAVORITE, 1);
+                            values.put(QuestionContract.QuestionColumns.FAVORITE, 1);
 
-                            Uri uri = Uri.parse(MyContentProvider.CONTENT_URI + "/" + number);
+                            Uri uri = Uri.parse(QuestionContentProvider.URI_QUESTIONS + "/" + number);
 
                             return getActivity().getContentResolver().update
                                     (uri,
@@ -364,5 +368,13 @@ public class QuizFragment extends Fragment {
 
     }
 
+    public static QuizFragment newInstance() {
+        QuizFragment quizFragment = new QuizFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("usecase", QuestionContentProvider.URI_QUESTIONS.toString());
+        quizFragment.setArguments(bundle);
+
+        return quizFragment;
+    }
 
 }

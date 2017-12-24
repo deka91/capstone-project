@@ -19,6 +19,8 @@ public class ResultFragment extends Fragment {
     @BindView(R.id.tv_score)
     TextView score;
 
+    private String uriString;
+
     public ResultFragment() {
         // Required empty public constructor
     }
@@ -35,6 +37,7 @@ public class ResultFragment extends Fragment {
         if (bundle != null) {
             int userScore = bundle.getInt(getString(R.string.key_score));
             int questionsAmount = bundle.getInt(getString(R.string.key_questions_amount));
+            uriString = bundle.getString("uri");
             score.setText(userScore + "/" + questionsAmount);
         }
 
@@ -51,7 +54,8 @@ public class ResultFragment extends Fragment {
 
     @OnClick(R.id.bt_again)
     void repeateQuestions(View view) {
-        getFragmentManager().findFragmentByTag("yourstringtag");
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, QuizFragment.newInstance()).addToBackStack(null).commit();
     }
 
 

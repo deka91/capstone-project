@@ -12,8 +12,8 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.udacity.dk.cleverdroid.R;
-import de.udacity.dk.cleverdroid.database.CleverDroidDb;
-import de.udacity.dk.cleverdroid.database.MyContentProvider;
+import de.udacity.dk.cleverdroid.database.QuestionContract;
+import de.udacity.dk.cleverdroid.database.QuestionContentProvider;
 
 public class PrefsActivity extends AppCompatActivity {
 
@@ -42,8 +42,8 @@ public class PrefsActivity extends AppCompatActivity {
             progress.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 public boolean onPreferenceClick(Preference preference) {
                     ContentValues values = new ContentValues();
-                    values.put(CleverDroidDb.QuestionColumns.CORRECT, 0);
-                    getActivity().getContentResolver().update(MyContentProvider.WRONG_QUESTIONS_URI, values, null, null);
+                    values.put(QuestionContract.QuestionColumns.CORRECT, 0);
+                    getActivity().getContentResolver().update(QuestionContentProvider.URI_QUESTIONS_WRONG, values, null, null);
                     Toast.makeText(getActivity(), "Your progress was deleted!", Toast.LENGTH_SHORT).show();
                     return true;
                 }
@@ -53,8 +53,8 @@ public class PrefsActivity extends AppCompatActivity {
             favorites.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 public boolean onPreferenceClick(Preference preference) {
                     ContentValues values = new ContentValues();
-                    values.put(CleverDroidDb.QuestionColumns.FAVORITE, 0);
-                    getActivity().getContentResolver().update(MyContentProvider.FAVORITE_QUESTIONS_URI, values, null, null);
+                    values.put(QuestionContract.QuestionColumns.FAVORITE, 0);
+                    getActivity().getContentResolver().update(QuestionContentProvider.URI_QUESTIONS_FAVORITE, values, null, null);
                     Toast.makeText(getActivity(), "Your favorites were deleted!", Toast.LENGTH_SHORT).show();
                     return true;
                 }
