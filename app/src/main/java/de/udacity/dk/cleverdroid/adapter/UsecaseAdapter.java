@@ -72,6 +72,5 @@ public class UsecaseAdapter extends RecyclerView.Adapter<UsecaseAdapter.MyViewHo
     public int getItemCount() {
         return usecaseList.size();
     }
-
 }
 

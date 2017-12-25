@@ -19,6 +19,8 @@ public class QuestionContract {
             BASE_CONTENT_URI.buildUpon().appendEncodedPath(PATH_QUESTIONS + "/wrong").build();
     public static final Uri URI_QUESTIONS_FAVORITE =
             BASE_CONTENT_URI.buildUpon().appendEncodedPath(PATH_QUESTIONS + "/favorite").build();
+    public static final Uri URI_QUESTIONS_CORRECT =
+            BASE_CONTENT_URI.buildUpon().appendEncodedPath(PATH_QUESTIONS + "/correct").build();
 
 
     public static final class QuestionColumns implements BaseColumns {

@@ -1,13 +1,19 @@
 package de.udacity.dk.cleverdroid.ui;
 
+import android.content.ContentResolver;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +24,12 @@ import de.udacity.dk.cleverdroid.R;
 import de.udacity.dk.cleverdroid.adapter.RecyclerViewClickListener;
 import de.udacity.dk.cleverdroid.adapter.UsecaseAdapter;
 import de.udacity.dk.cleverdroid.database.QuestionContract;
+import de.udacity.dk.cleverdroid.util.Constants;
 
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    public static final String TAG = MainFragment.class.getSimpleName();
+    private static final int LOADER_ID = 0x01;
     private ArrayList<String> usecaseList = new ArrayList<>();
     private UsecaseAdapter usecaseAdapter;
     private RecyclerView recyclerView;
@@ -45,7 +54,6 @@ public class MainFragment extends Fragment {
         RecyclerViewClickListener listener = new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
-                QuizFragment quizFragment = new QuizFragment();
                 Bundle bundle = new Bundle();
                 switch (position) {
                     case 0:
@@ -59,6 +67,7 @@ public class MainFragment extends Fragment {
                         break;
                 }
                 if (position != 3) {
+                    QuizFragment quizFragment = new QuizFragment();
                     quizFragment.setArguments(bundle);
                     getActivity().getSupportFragmentManager().beginTransaction()
                             .replace(R.id.fragment_container, quizFragment).addToBackStack(quizFragment.getClass().getName()).commit();
@@ -77,11 +86,11 @@ public class MainFragment extends Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(usecaseAdapter);
 
+        getLoaderManager().initLoader(LOADER_ID, null, this);
         usecaseAdapter.notifyDataSetChanged();
 
         return view;
     }
-
 
     private void prepareUsecaseData() {
         String usecase = getString(R.string.main_start);
@@ -94,5 +103,63 @@ public class MainFragment extends Fragment {
         usecaseList.add(usecase);
     }
 
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new AsyncTaskLoader<Cursor>(getContext()) {
+
+            // Initialize a Cursor, this will hold all the task data
+            Cursor scoreData = null;
+
+            // onStartLoading() is called when a loader first starts loading data
+            @Override
+            protected void onStartLoading() {
+                if (scoreData != null) {
+                    // Delivers any previously loaded data immediately
+                    deliverResult(scoreData);
+                } else {
+                    // Force a new load
+                    forceLoad();
+                }
+            }
+
+            // loadInBackground() performs asynchronous loading of data
+            @Override
+            public Cursor loadInBackground() {
+                try {
+                    // Get the content resolver
+                    ContentResolver resolver = getActivity().getContentResolver();
+
+                    return resolver.query(QuestionContract.URI_QUESTIONS_CORRECT,
+                            null, null, null, null);
+
+                } catch (Exception e) {
+                    Log.e(TAG, "Failed to asynchronously load data.");
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            // deliverResult sends the result of the load, a Cursor, to the registered listener
+            public void deliverResult(Cursor data) {
+                scoreData = data;
+                super.deliverResult(data);
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.i(TAG, "The current score is: " + data.getCount() + "/" + Constants.TOTAL_QUESTIONS);
+        usecaseList.remove(3);
+        usecaseAdapter.notifyItemRemoved(3);
+        usecaseList.add(data.getCount() + "/" + Constants.TOTAL_QUESTIONS);
+        usecaseAdapter.notifyItemInserted(3);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
 
 }

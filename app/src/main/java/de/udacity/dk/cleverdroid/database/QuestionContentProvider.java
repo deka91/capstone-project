@@ -25,13 +25,15 @@ public class QuestionContentProvider extends ContentProvider {
     private static final int QUESTIONS_ALL = 1;
     private static final int QUESTIONS_WRONG = 2;
     private static final int QUESTIONS_FAVORITE = 3;
-    private static final int QUESTIONS_ID = 4;
+    private static final int QUESTIONS_CORRECT = 4;
+    private static final int QUESTIONS_ID = 5;
 
     static {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(AUTHORITY, PATH_QUESTIONS, QUESTIONS_ALL);
         uriMatcher.addURI(AUTHORITY, PATH_QUESTIONS + "/wrong", QUESTIONS_WRONG);
         uriMatcher.addURI(AUTHORITY, PATH_QUESTIONS + "/favorite", QUESTIONS_FAVORITE);
+        uriMatcher.addURI(AUTHORITY, PATH_QUESTIONS + "/correct", QUESTIONS_CORRECT);
         uriMatcher.addURI(AUTHORITY, PATH_QUESTIONS + "/#", QUESTIONS_ID);
     }
 
@@ -61,6 +63,9 @@ public class QuestionContentProvider extends ContentProvider {
                 break;
             case QUESTIONS_FAVORITE:
                 selection = "favorite = 1";
+                break;
+            case QUESTIONS_CORRECT:
+                selection = "correct = 1";
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);

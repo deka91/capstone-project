@@ -37,7 +37,7 @@ import de.udacity.dk.cleverdroid.database.QuestionDbHelper;
 public class QuizFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String TAG = QuizFragment.class.getSimpleName();
-    private static final int LOADER_ID = 0x01;
+    private static final int LOADER_ID = 0x02;
     private QuestionBank questionBank = new QuestionBank();
     private String correctAnswer;
     private int score;
