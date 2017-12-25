@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import de.udacity.dk.cleverdroid.R;
 import de.udacity.dk.cleverdroid.adapter.RecyclerViewClickListener;
 import de.udacity.dk.cleverdroid.adapter.UsecaseAdapter;
-import de.udacity.dk.cleverdroid.database.QuestionContentProvider;
+import de.udacity.dk.cleverdroid.database.QuestionContract;
 
 public class MainFragment extends Fragment {
 
@@ -49,13 +49,13 @@ public class MainFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 switch (position) {
                     case 0:
-                        bundle.putString(getString(R.string.key_usecase), QuestionContentProvider.URI_QUESTIONS.toString());
+                        bundle.putString(getString(R.string.key_usecase), QuestionContract.URI_QUESTIONS.toString());
                         break;
                     case 1:
-                        bundle.putString(getString(R.string.key_usecase), QuestionContentProvider.URI_QUESTIONS_WRONG.toString());
+                        bundle.putString(getString(R.string.key_usecase), QuestionContract.URI_QUESTIONS_WRONG.toString());
                         break;
                     case 2:
-                        bundle.putString(getString(R.string.key_usecase), QuestionContentProvider.URI_QUESTIONS_FAVORITE.toString());
+                        bundle.putString(getString(R.string.key_usecase), QuestionContract.URI_QUESTIONS_FAVORITE.toString());
                         break;
                 }
                 quizFragment.setArguments(bundle);

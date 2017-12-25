@@ -1,5 +1,6 @@
 package de.udacity.dk.cleverdroid.database;
 
+import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
@@ -7,6 +8,18 @@ import android.provider.BaseColumns;
  */
 
 public class QuestionContract {
+
+    public static final String PATH_QUESTIONS = "questions";
+    public static final String AUTHORITY = "de.udacity.dk.cleverdroid";
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
+
+    public static final Uri URI_QUESTIONS =
+            BASE_CONTENT_URI.buildUpon().appendPath(PATH_QUESTIONS).build();
+    public static final Uri URI_QUESTIONS_WRONG =
+            BASE_CONTENT_URI.buildUpon().appendEncodedPath(PATH_QUESTIONS + "/wrong").build();
+    public static final Uri URI_QUESTIONS_FAVORITE =
+            BASE_CONTENT_URI.buildUpon().appendEncodedPath(PATH_QUESTIONS + "/favorite").build();
+
 
     public static final class QuestionColumns implements BaseColumns {
         public static final String TABLE = "Question";

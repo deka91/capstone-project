@@ -7,7 +7,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,11 +31,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.udacity.dk.cleverdroid.R;
 import de.udacity.dk.cleverdroid.data.QuestionBank;
-import de.udacity.dk.cleverdroid.database.QuestionContentProvider;
 import de.udacity.dk.cleverdroid.database.QuestionContract;
 import de.udacity.dk.cleverdroid.database.QuestionDbHelper;
 
-public class QuizFragment extends Fragment {
+public class QuizFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String TAG = QuizFragment.class.getSimpleName();
     private static final int LOADER_ID = 0x01;
@@ -91,6 +95,12 @@ public class QuizFragment extends Fragment {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        getLoaderManager().initLoader(LOADER_ID, null, this);
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_quiz, container, false);
@@ -102,8 +112,7 @@ public class QuizFragment extends Fragment {
             uriString = bundle.getString(getString(R.string.key_usecase));
         }
 
-//        getActivity().getSupportLoaderManager().initLoader(LOADER_ID, null, this);
-        new QuestionFetchTask().execute();
+        getLoaderManager().initLoader(LOADER_ID, null, this);
 
         return view;
     }
@@ -130,40 +139,64 @@ public class QuizFragment extends Fragment {
         });
     }
 
-    public class QuestionFetchTask extends AsyncTask<Void, Void, Cursor> {
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-        // Invoked on a background thread
-        @Override
-        protected Cursor doInBackground(Void... params) {
-            // Make the query to get the cursor
+        return new AsyncTaskLoader<Cursor>(getContext()) {
 
-            // Get the content resolver
-            ContentResolver resolver = getActivity().getContentResolver();
+            // Initialize a Cursor, this will hold all the task data
+            Cursor questionData = null;
 
-            // Call the query method on the resolver with the correct Uri from the contract class
-            Uri uri = Uri.parse(uriString);
-            String selection = "";
-            if (QuestionContentProvider.URI_QUESTIONS_WRONG.toString().equals(uriString)) {
-                selection = "correct = 0";
-            } else if (QuestionContentProvider.URI_QUESTIONS_FAVORITE.toString().equals(uriString)) {
-                selection = "favorite = 1";
+            // onStartLoading() is called when a loader first starts loading data
+            @Override
+            protected void onStartLoading() {
+                if (questionData != null) {
+                    // Delivers any previously loaded data immediately
+                    deliverResult(questionData);
+                } else {
+                    // Force a new load
+                    forceLoad();
+                }
             }
 
-            Cursor cursor = resolver.query(uri,
-                    null, selection, null, null);
-            return cursor;
-        }
+            // loadInBackground() performs asynchronous loading of data
+            @Override
+            public Cursor loadInBackground() {
+                try {
+                    // Get the content resolver
+                    ContentResolver resolver = getActivity().getContentResolver();
 
+                    Uri uri = Uri.parse(uriString);
+                    return resolver.query(uri,
+                            null, null, null, null);
 
-        // Invoked on UI thread
-        @Override
-        protected void onPostExecute(Cursor cursor) {
-            super.onPostExecute(cursor);
-            questionDbHelper = new QuestionDbHelper(getContext());
-            questionDbHelper.setCursor(cursor);
-            questionBank.initQuestions(questionDbHelper);
-            updateQuestion();
-        }
+                } catch (Exception e) {
+                    Log.e(TAG, "Failed to asynchronously load data.");
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            // deliverResult sends the result of the load, a Cursor, to the registered listener
+            public void deliverResult(Cursor data) {
+                questionData = data;
+                super.deliverResult(data);
+            }
+        };
+
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        questionDbHelper = new QuestionDbHelper(getContext());
+        questionDbHelper.setCursor(data);
+        questionBank.initQuestions(questionDbHelper);
+        updateQuestion();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 
     private void checkIfQuestionIsInFavorites() {
@@ -272,7 +305,7 @@ public class QuizFragment extends Fragment {
                 answer.setBackgroundColor(getResources().getColor(R.color.wrongBackground));
             }
 
-            Uri uri = Uri.parse(QuestionContentProvider.URI_QUESTIONS + "/" + number);
+            Uri uri = Uri.parse(QuestionContract.URI_QUESTIONS + "/" + number);
 
             resolver.update(uri,
                     values, null, null);
@@ -328,7 +361,7 @@ public class QuizFragment extends Fragment {
                             ContentValues values = new ContentValues();
                             values.put(QuestionContract.QuestionColumns.FAVORITE, 0);
 
-                            Uri uri = Uri.parse(QuestionContentProvider.URI_QUESTIONS + "/" + number);
+                            Uri uri = Uri.parse(QuestionContract.URI_QUESTIONS + "/" + number);
 
                             return getActivity().getContentResolver().update
                                     (uri,
@@ -349,7 +382,7 @@ public class QuizFragment extends Fragment {
                             ContentValues values = new ContentValues();
                             values.put(QuestionContract.QuestionColumns.FAVORITE, 1);
 
-                            Uri uri = Uri.parse(QuestionContentProvider.URI_QUESTIONS + "/" + number);
+                            Uri uri = Uri.parse(QuestionContract.URI_QUESTIONS + "/" + number);
 
                             return getActivity().getContentResolver().update
                                     (uri,
@@ -365,16 +398,20 @@ public class QuizFragment extends Fragment {
                 }
             }
         }.execute();
-
     }
 
     public static QuizFragment newInstance() {
         QuizFragment quizFragment = new QuizFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("usecase", QuestionContentProvider.URI_QUESTIONS.toString());
+        bundle.putString("usecase", QuestionContract.URI_QUESTIONS.toString());
         quizFragment.setArguments(bundle);
 
         return quizFragment;
     }
 
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        getLoaderManager().restartLoader(LOADER_ID, null, this);
+//    }
 }

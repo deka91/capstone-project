@@ -10,6 +10,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import static de.udacity.dk.cleverdroid.database.QuestionContract.AUTHORITY;
+import static de.udacity.dk.cleverdroid.database.QuestionContract.PATH_QUESTIONS;
+
 /**
  * Created by Deniz Kalem on 12.12.2017.
  */
@@ -19,29 +22,17 @@ public class QuestionContentProvider extends ContentProvider {
     private QuestionDbHelper questionDbHelper;
     private static final UriMatcher uriMatcher;
 
-    private static final int ALL_QUESTIONS = 1;
-    private static final int WRONG_QUESTIONS = 2;
-    private static final int FAVORITE_QUESTIONS = 3;
-    private static final int QUESTION_WITH_ID = 4;
-
-    private static final String PATH_QUESTIONS = "questions";
-
-    private static final String AUTHORITY = "de.udacity.dk.cleverdroid";
-    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
-
-    public static final Uri URI_QUESTIONS =
-            BASE_CONTENT_URI.buildUpon().appendPath(PATH_QUESTIONS).build();
-    public static final Uri URI_QUESTIONS_WRONG =
-            BASE_CONTENT_URI.buildUpon().appendEncodedPath(PATH_QUESTIONS + "/wrong").build();
-    public static final Uri URI_QUESTIONS_FAVORITE =
-            BASE_CONTENT_URI.buildUpon().appendEncodedPath(PATH_QUESTIONS + "/favorite").build();
+    private static final int QUESTIONS_ALL = 1;
+    private static final int QUESTIONS_WRONG = 2;
+    private static final int QUESTIONS_FAVORITE = 3;
+    private static final int QUESTIONS_ID = 4;
 
     static {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        uriMatcher.addURI(AUTHORITY, PATH_QUESTIONS, ALL_QUESTIONS);
-        uriMatcher.addURI(AUTHORITY, PATH_QUESTIONS + "/wrong", WRONG_QUESTIONS);
-        uriMatcher.addURI(AUTHORITY, PATH_QUESTIONS + "/favorite", FAVORITE_QUESTIONS);
-        uriMatcher.addURI(AUTHORITY, PATH_QUESTIONS + "/#", QUESTION_WITH_ID);
+        uriMatcher.addURI(AUTHORITY, PATH_QUESTIONS, QUESTIONS_ALL);
+        uriMatcher.addURI(AUTHORITY, PATH_QUESTIONS + "/wrong", QUESTIONS_WRONG);
+        uriMatcher.addURI(AUTHORITY, PATH_QUESTIONS + "/favorite", QUESTIONS_FAVORITE);
+        uriMatcher.addURI(AUTHORITY, PATH_QUESTIONS + "/#", QUESTIONS_ID);
     }
 
     @Override
@@ -63,21 +54,19 @@ public class QuestionContentProvider extends ContentProvider {
         Cursor cursor;
 
         switch (uriMatcher.match(uri)) {
-            case ALL_QUESTIONS:
-                cursor = db.query(QuestionContract.QuestionColumns.TABLE, projection, selection, selectionArgs, null, null, sortOrder);
+            case QUESTIONS_ALL:
                 break;
-            case WRONG_QUESTIONS:
-                String queryWrong = "SELECT * FROM " + QuestionContract.QuestionColumns.TABLE + " WHERE ";
-                cursor = db.rawQuery(queryWrong + selection, selectionArgs);
+            case QUESTIONS_WRONG:
+                selection = "correct = 0";
                 break;
-            case FAVORITE_QUESTIONS:
-                String queryFavorite = "SELECT * FROM " + QuestionContract.QuestionColumns.TABLE + " WHERE ";
-                cursor = db.rawQuery(queryFavorite + selection, selectionArgs);
+            case QUESTIONS_FAVORITE:
+                selection = "favorite = 1";
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
         }
 
+        cursor = db.query(QuestionContract.QuestionColumns.TABLE, projection, selection, selectionArgs, null, null, sortOrder);
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
     }
@@ -94,26 +83,24 @@ public class QuestionContentProvider extends ContentProvider {
         return 0;
     }
 
-    //FIXME
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String selection, @Nullable String[] selectionArgs) {
         SQLiteDatabase db = questionDbHelper.getWritableDatabase();
         switch (uriMatcher.match(uri)) {
-            case QUESTION_WITH_ID:
+            case QUESTIONS_ID:
                 String id = uri.getPathSegments().get(1);
                 selection = QuestionContract.QuestionColumns._ID + "=" + id
                         + (!TextUtils.isEmpty(selection) ?
                         " AND (" + selection + ')' : "");
                 break;
-            case WRONG_QUESTIONS:
-//                selection =
-//                        (!TextUtils.isEmpty(selection) ?
-//                                " AND (" + "correct = 0" + ')' : "");
+            case QUESTIONS_WRONG:
+                contentValues = new ContentValues();
+                contentValues.put(QuestionContract.QuestionColumns.CORRECT, 0);
                 break;
-            case FAVORITE_QUESTIONS:
+            case QUESTIONS_FAVORITE:
                 // UPDATE Question SET favorite=0
-//                selection = (!TextUtils.isEmpty(selection) ?
-//                        " AND (" + "favorite = 0" + ')' : "");
+                contentValues = new ContentValues();
+                contentValues.put(QuestionContract.QuestionColumns.FAVORITE, 0);
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);

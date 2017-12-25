@@ -12,7 +12,6 @@ import de.udacity.dk.cleverdroid.database.QuestionDbHelper;
 public class QuestionBank {
 
     List<Question> questions = new ArrayList<>();
-    QuestionDbHelper questionDbHelper;
 
     public int getFavorite(int i) {
         return questions.get(i).getFavorite();
