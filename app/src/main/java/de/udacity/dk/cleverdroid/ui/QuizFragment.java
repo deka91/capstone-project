@@ -38,7 +38,6 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
 
     public static final String TAG = QuizFragment.class.getSimpleName();
     private static final int LOADER_ID = 0x01;
-    private QuestionDbHelper questionDbHelper;
     private QuestionBank questionBank = new QuestionBank();
     private String correctAnswer;
     private int score;
@@ -114,6 +113,7 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
 
         getLoaderManager().initLoader(LOADER_ID, null, this);
 
+
         return view;
     }
 
@@ -188,7 +188,7 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        questionDbHelper = new QuestionDbHelper(getContext());
+        QuestionDbHelper questionDbHelper = new QuestionDbHelper(getContext());
         questionDbHelper.setCursor(data);
         questionBank.initQuestions(questionDbHelper);
         updateQuestion();
@@ -409,9 +409,4 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
         return quizFragment;
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        getLoaderManager().restartLoader(LOADER_ID, null, this);
-//    }
 }
