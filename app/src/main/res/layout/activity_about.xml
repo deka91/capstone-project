@@ -6,6 +6,6 @@
     android:background="@color/colorBackground"
     tools:context="de.udacity.dk.cleverdroid.ui.AboutActivity">
 
-    <include layout="@layout/toolbar" />
+    <include layout="@layout/app_bar" />
 
 </android.support.design.widget.CoordinatorLayout>
