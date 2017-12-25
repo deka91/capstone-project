@@ -18,11 +18,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import java.util.ArrayList;
 
 import de.udacity.dk.cleverdroid.R;
 import de.udacity.dk.cleverdroid.adapter.RecyclerViewClickListener;
 import de.udacity.dk.cleverdroid.adapter.UsecaseAdapter;
+import de.udacity.dk.cleverdroid.analytics.AnalyticsApplication;
 import de.udacity.dk.cleverdroid.database.QuestionContract;
 import de.udacity.dk.cleverdroid.util.Constants;
 
@@ -33,6 +37,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     private ArrayList<String> usecaseList = new ArrayList<>();
     private UsecaseAdapter usecaseAdapter;
     private RecyclerView recyclerView;
+    private Tracker tracker;
 
     public MainFragment() {
     }
@@ -40,6 +45,8 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AnalyticsApplication application = (AnalyticsApplication) getActivity().getApplication();
+        tracker = application.getDefaultTracker();
         prepareUsecaseData();
     }
 
@@ -58,15 +65,22 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
                 switch (position) {
                     case 0:
                         bundle.putString(getString(R.string.key_usecase), QuestionContract.URI_QUESTIONS.toString());
+                        Log.i(TAG, "Setting screen name: " + (Constants.SCREEN_QUESTIONS_ALL));
+                        tracker.setScreenName(Constants.SCREEN_QUESTIONS_ALL);
                         break;
                     case 1:
                         bundle.putString(getString(R.string.key_usecase), QuestionContract.URI_QUESTIONS_WRONG.toString());
+                        Log.i(TAG, "Setting screen name: " + Constants.SCREEN_QUESTIONS_WRONG);
+                        tracker.setScreenName(Constants.SCREEN_QUESTIONS_WRONG);
                         break;
                     case 2:
                         bundle.putString(getString(R.string.key_usecase), QuestionContract.URI_QUESTIONS_FAVORITE.toString());
+                        Log.i(TAG, "Setting screen name: " + Constants.SCREEN_QUESTIONS_FAVORITE);
+                        tracker.setScreenName(Constants.SCREEN_QUESTIONS_FAVORITE);
                         break;
                 }
                 if (position != 3) {
+                    tracker.send(new HitBuilders.ScreenViewBuilder().build());
                     QuizFragment quizFragment = new QuizFragment();
                     quizFragment.setArguments(bundle);
                     getActivity().getSupportFragmentManager().beginTransaction()
@@ -161,5 +175,4 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onLoaderReset(Loader<Cursor> loader) {
 
     }
-
 }
