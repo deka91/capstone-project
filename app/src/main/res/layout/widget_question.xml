@@ -1,0 +1,58 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:divider="@drawable/vertical_divider"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="@dimen/widget_margin"
+    android:showDividers="middle">
+
+    <TextView
+        android:id="@+id/tv_start"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:layout_weight="1"
+        android:contentDescription="@string/widget_start"
+        android:gravity="center"
+        android:text="@string/widget_start"
+        android:textColor="#ffffff"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_repeat"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:layout_weight="1"
+        android:contentDescription="@string/widget_repeat"
+        android:gravity="center"
+        android:text="@string/widget_repeat"
+        android:textColor="#ffffff"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_favorites"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:layout_weight="1"
+        android:contentDescription="@string/widget_favorites"
+        android:gravity="center"
+        android:text="@string/widget_favorites"
+        android:textColor="#ffffff"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_score"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="3/50"
+        android:textColor="#ffffff"
+        android:textSize="18sp" />
+
+</LinearLayout>

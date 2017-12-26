@@ -23,4 +23,8 @@
 
 
     <string name="title_activity_about">AboutActivity</string>
+    <string name="widget_start">Start</string>
+    <string name="widget_repeat">Repeat</string>
+    <string name="widget_favorites">Favorites</string>
+    <string name="add_widget">Add widget</string>
 </resources>
