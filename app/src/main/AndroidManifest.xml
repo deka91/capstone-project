@@ -34,6 +34,8 @@
             android:readPermission="true"
             android:writePermission="true" />
 
+        <service android:name=".widget.ScoreService" />
+
         <receiver android:name=".widget.QuestionWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
