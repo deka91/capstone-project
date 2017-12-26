@@ -8,7 +8,8 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 
 import de.udacity.dk.cleverdroid.R;
-import de.udacity.dk.cleverdroid.ui.MainActivity;
+import de.udacity.dk.cleverdroid.database.QuestionContract;
+import de.udacity.dk.cleverdroid.ui.QuizActivity;
 
 /**
  * Implementation of App Widget functionality.
@@ -18,14 +19,23 @@ public class QuestionWidgetProvider extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, String score,
                                 int appWidgetId) {
 
-        Intent intent = new Intent(context, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        Intent startIntent = new Intent(context, QuizActivity.class);
+        startIntent.putExtra(context.getString(R.string.key_usecase), QuestionContract.URI_QUESTIONS.toString());
+        PendingIntent pendingStartIntent = PendingIntent.getActivity(context, 0, startIntent, 0);
+
+        Intent repeatIntent = new Intent(context, QuizActivity.class);
+        repeatIntent.putExtra(context.getString(R.string.key_usecase), QuestionContract.URI_QUESTIONS_WRONG.toString());
+        PendingIntent pendingRepeatIntent = PendingIntent.getActivity(context, 1, repeatIntent, 0);
+
+        Intent favoriteIntent = new Intent(context, QuizActivity.class);
+        favoriteIntent.putExtra(context.getString(R.string.key_usecase), QuestionContract.URI_QUESTIONS_FAVORITE.toString());
+        PendingIntent pendingFavoriteIntent = PendingIntent.getActivity(context, 2, favoriteIntent, 0);
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_question);
         views.setTextViewText(R.id.tv_score, score);
-        views.setOnClickPendingIntent(R.id.tv_start, pendingIntent);
-        views.setOnClickPendingIntent(R.id.tv_repeat, pendingIntent);
-        views.setOnClickPendingIntent(R.id.tv_favorites, pendingIntent);
+        views.setOnClickPendingIntent(R.id.tv_start, pendingStartIntent);
+        views.setOnClickPendingIntent(R.id.tv_repeat, pendingRepeatIntent);
+        views.setOnClickPendingIntent(R.id.tv_favorites, pendingFavoriteIntent);
 
         Intent scoreIntent = new Intent(context, ScoreService.class);
         scoreIntent.setAction(ScoreService.ACTION_GET_CURRENT_SCORE);

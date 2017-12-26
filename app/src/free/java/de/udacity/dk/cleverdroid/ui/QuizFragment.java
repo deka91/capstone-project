@@ -101,6 +101,12 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         getLoaderManager().initLoader(LOADER_ID, null, this);
         super.onActivityCreated(savedInstanceState);
@@ -110,7 +116,6 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_quiz, container, false);
-        setHasOptionsMenu(true);
         ButterKnife.bind(this, view);
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -133,25 +138,11 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_settings).setVisible(false);
-        menu.findItem(R.id.action_about).setVisible(false);
         super.onPrepareOptionsMenu(menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                getActivity().onBackPressed();
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.quiz_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
 
         favorite = menu.findItem(R.id.action_favorite);
@@ -162,6 +153,11 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
                 return true;
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -253,7 +249,9 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
             int realQuestionNumber = number + 1;
             questionNumber.setText(getString(R.string.quiz_title) + " " + realQuestionNumber + "/" + questionBank.getLength());
             question.setText(questionBank.getQuestion(number));
-            checkIfQuestionIsInFavorites();
+            if (favorite != null) {
+                checkIfQuestionIsInFavorites();
+            }
         } else if (number > 0) {
             // last question
             ResultFragment resultFragment = new ResultFragment();

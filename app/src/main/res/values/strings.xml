@@ -4,9 +4,9 @@
     <string name="main_repeat">Repeat</string>
     <string name="main_favorites">Favorites</string>
     <string name="main_score">Score</string>
-    <string name="key_usecase">usecase</string>
-    <string name="key_score">score</string>
-    <string name="key_questions_amount">questions_amount</string>
+    <string name="key_usecase" translatable="false">usecase</string>
+    <string name="key_score" translatable="false">score</string>
+    <string name="key_questions_amount" translatable="false">questions_amount</string>
     <string name="quiz_screen">Quiz</string>
     <string name="quiz_title">Question</string>
     <string name="quiz_next">Next</string>

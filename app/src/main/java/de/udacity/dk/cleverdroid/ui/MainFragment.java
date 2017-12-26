@@ -1,6 +1,7 @@
 package de.udacity.dk.cleverdroid.ui;
 
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -52,6 +53,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         super.onCreate(savedInstanceState);
         AnalyticsApplication application = (AnalyticsApplication) getActivity().getApplication();
         tracker = application.getDefaultTracker();
+
         prepareUsecaseData();
     }
 
@@ -70,15 +72,18 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
             @Override
             public void onClick(View view, int position) {
                 Bundle bundle = new Bundle();
+                Intent intent = new Intent(getActivity(), QuizActivity.class);
                 boolean startQuiz = true;
                 switch (position) {
                     case 0:
                         bundle.putString(getString(R.string.key_usecase), QuestionContract.URI_QUESTIONS.toString());
+                        intent.putExtra(getString(R.string.key_usecase), QuestionContract.URI_QUESTIONS.toString());
                         Log.i(TAG, "Setting screen name: " + (Constants.SCREEN_QUESTIONS_ALL));
                         tracker.setScreenName(Constants.SCREEN_QUESTIONS_ALL);
                         break;
                     case 1:
                         bundle.putString(getString(R.string.key_usecase), QuestionContract.URI_QUESTIONS_WRONG.toString());
+                        intent.putExtra(getString(R.string.key_usecase), QuestionContract.URI_QUESTIONS_WRONG.toString());
                         Log.i(TAG, "Setting screen name: " + Constants.SCREEN_QUESTIONS_WRONG);
                         tracker.setScreenName(Constants.SCREEN_QUESTIONS_WRONG);
                         if (wrongQuestions == 0) {
@@ -88,6 +93,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
                         break;
                     case 2:
                         bundle.putString(getString(R.string.key_usecase), QuestionContract.URI_QUESTIONS_FAVORITE.toString());
+                        intent.putExtra(getString(R.string.key_usecase), QuestionContract.URI_QUESTIONS_FAVORITE.toString());
                         Log.i(TAG, "Setting screen name: " + Constants.SCREEN_QUESTIONS_FAVORITE);
                         tracker.setScreenName(Constants.SCREEN_QUESTIONS_FAVORITE);
                         if (favoriteQuestions == 0) {
@@ -98,10 +104,12 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
                 }
                 if (position != 3 && startQuiz == true) {
                     tracker.send(new HitBuilders.ScreenViewBuilder().build());
-                    QuizFragment quizFragment = new QuizFragment();
-                    quizFragment.setArguments(bundle);
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, quizFragment).addToBackStack(quizFragment.getClass().getName()).commit();
+                    startActivity(intent);
+
+//                    QuizFragment quizFragment = new QuizFragment();
+//                    quizFragment.setArguments(bundle);
+//                    getActivity().getSupportFragmentManager().beginTransaction()
+//                            .replace(R.id.fragment_container, quizFragment).addToBackStack(quizFragment.getClass().getName()).commit();
                 }
             }
         };
