@@ -17,6 +17,10 @@ public class QuestionBank {
         return questions.get(i).getFavorite();
     }
 
+    public int getId(int i) {
+        return questions.get(i).getId();
+    }
+
     public int getType(int i) {
         return questions.get(i).getType();
     }

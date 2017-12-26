@@ -33,6 +33,9 @@ public class QuestionDbHelper extends SQLiteAssetHelper {
             do {
                 Question question = new Question();
 
+                int id = cursor.getInt(cursor.getColumnIndex(QuestionContract.QuestionColumns._ID));
+                question.setId(id);
+
                 int type = cursor.getInt(cursor.getColumnIndex(QuestionContract.QuestionColumns.TYPE));
                 question.setType(type);
 

@@ -328,7 +328,7 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
                 answer.setBackgroundColor(getResources().getColor(R.color.wrongBackground));
             }
 
-            Uri uri = Uri.parse(QuestionContract.URI_QUESTIONS + "/" + number);
+            Uri uri = Uri.parse(QuestionContract.URI_QUESTIONS + "/" + questionBank.getId(number));
 
             resolver.update(uri,
                     values, null, null);

@@ -53,8 +53,11 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         super.onCreate(savedInstanceState);
         AnalyticsApplication application = (AnalyticsApplication) getActivity().getApplication();
         tracker = application.getDefaultTracker();
-
         prepareUsecaseData();
+
+        getLoaderManager().initLoader(SCORE_LOADER, null, this);
+        getLoaderManager().initLoader(WRONG_QUESTIONS_LOADER, null, this);
+        getLoaderManager().initLoader(FAVORITE_QUESTIONS_LOADER, null, this);
     }
 
     @Override
@@ -105,11 +108,6 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
                 if (position != 3 && startQuiz == true) {
                     tracker.send(new HitBuilders.ScreenViewBuilder().build());
                     startActivity(intent);
-
-//                    QuizFragment quizFragment = new QuizFragment();
-//                    quizFragment.setArguments(bundle);
-//                    getActivity().getSupportFragmentManager().beginTransaction()
-//                            .replace(R.id.fragment_container, quizFragment).addToBackStack(quizFragment.getClass().getName()).commit();
                 }
             }
         };
@@ -125,12 +123,17 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(usecaseAdapter);
 
-        getLoaderManager().initLoader(SCORE_LOADER, null, this);
-        getLoaderManager().initLoader(WRONG_QUESTIONS_LOADER, null, this);
-        getLoaderManager().initLoader(FAVORITE_QUESTIONS_LOADER, null, this);
         usecaseAdapter.notifyDataSetChanged();
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getLoaderManager().restartLoader(SCORE_LOADER, null, this);
+        getLoaderManager().restartLoader(WRONG_QUESTIONS_LOADER, null, this);
+        getLoaderManager().restartLoader(FAVORITE_QUESTIONS_LOADER, null, this);
     }
 
     private void prepareUsecaseData() {

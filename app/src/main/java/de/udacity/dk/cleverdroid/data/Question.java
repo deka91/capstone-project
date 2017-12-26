@@ -5,6 +5,7 @@ package de.udacity.dk.cleverdroid.data;
  */
 
 public class Question {
+    private int id;
     private int type;
     private int favorite;
     private String question;
@@ -64,5 +65,13 @@ public class Question {
 
     public void setAnswer(String answer) {
         this.answer = answer;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
