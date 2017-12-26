@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -34,7 +35,10 @@ import de.udacity.dk.cleverdroid.util.Constants;
 public class MainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String TAG = MainFragment.class.getSimpleName();
-    private static final int LOADER_ID = 0x01;
+    private static final int SCORE_LOADER = 1;
+    private static final int WRONG_QUESTIONS_LOADER = 2;
+    private static final int FAVORITE_QUESTIONS_LOADER = 3;
+    private int wrongQuestions, favoriteQuestions;
     private ArrayList<String> usecaseList = new ArrayList<>();
     private UsecaseAdapter usecaseAdapter;
     private RecyclerView recyclerView;
@@ -66,6 +70,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
             @Override
             public void onClick(View view, int position) {
                 Bundle bundle = new Bundle();
+                boolean startQuiz = true;
                 switch (position) {
                     case 0:
                         bundle.putString(getString(R.string.key_usecase), QuestionContract.URI_QUESTIONS.toString());
@@ -76,14 +81,22 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
                         bundle.putString(getString(R.string.key_usecase), QuestionContract.URI_QUESTIONS_WRONG.toString());
                         Log.i(TAG, "Setting screen name: " + Constants.SCREEN_QUESTIONS_WRONG);
                         tracker.setScreenName(Constants.SCREEN_QUESTIONS_WRONG);
+                        if (wrongQuestions == 0) {
+                            startQuiz = false;
+                            Toast.makeText(getContext(), "You don't have wrong answered questions.", Toast.LENGTH_SHORT).show();
+                        }
                         break;
                     case 2:
                         bundle.putString(getString(R.string.key_usecase), QuestionContract.URI_QUESTIONS_FAVORITE.toString());
                         Log.i(TAG, "Setting screen name: " + Constants.SCREEN_QUESTIONS_FAVORITE);
                         tracker.setScreenName(Constants.SCREEN_QUESTIONS_FAVORITE);
+                        if (favoriteQuestions == 0) {
+                            startQuiz = false;
+                            Toast.makeText(getContext(), "You don't have favorite marked questions.", Toast.LENGTH_SHORT).show();
+                        }
                         break;
                 }
-                if (position != 3) {
+                if (position != 3 && startQuiz == true) {
                     tracker.send(new HitBuilders.ScreenViewBuilder().build());
                     QuizFragment quizFragment = new QuizFragment();
                     quizFragment.setArguments(bundle);
@@ -104,7 +117,9 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(usecaseAdapter);
 
-        getLoaderManager().initLoader(LOADER_ID, null, this);
+        getLoaderManager().initLoader(SCORE_LOADER, null, this);
+        getLoaderManager().initLoader(WRONG_QUESTIONS_LOADER, null, this);
+        getLoaderManager().initLoader(FAVORITE_QUESTIONS_LOADER, null, this);
         usecaseAdapter.notifyDataSetChanged();
 
         return view;
@@ -124,55 +139,155 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new AsyncTaskLoader<Cursor>(getContext()) {
+        switch (id) {
+            case SCORE_LOADER:
+                return new AsyncTaskLoader<Cursor>(getContext()) {
 
-            // Initialize a Cursor, this will hold all the task data
-            Cursor scoreData = null;
+                    // Initialize a Cursor, this will hold all the task data
+                    Cursor scoreData = null;
 
-            // onStartLoading() is called when a loader first starts loading data
-            @Override
-            protected void onStartLoading() {
-                if (scoreData != null) {
-                    // Delivers any previously loaded data immediately
-                    deliverResult(scoreData);
-                } else {
-                    // Force a new load
-                    forceLoad();
-                }
-            }
+                    // onStartLoading() is called when a loader first starts loading data
+                    @Override
+                    protected void onStartLoading() {
+                        if (scoreData != null) {
+                            // Delivers any previously loaded data immediately
+                            deliverResult(scoreData);
+                        } else {
+                            // Force a new load
+                            forceLoad();
+                        }
+                    }
 
-            // loadInBackground() performs asynchronous loading of data
-            @Override
-            public Cursor loadInBackground() {
-                try {
-                    // Get the content resolver
-                    ContentResolver resolver = getActivity().getContentResolver();
+                    // loadInBackground() performs asynchronous loading of data
+                    @Override
+                    public Cursor loadInBackground() {
+                        try {
+                            // Get the content resolver
+                            ContentResolver resolver = getActivity().getContentResolver();
 
-                    return resolver.query(QuestionContract.URI_QUESTIONS_CORRECT,
-                            null, null, null, null);
+                            return resolver.query(QuestionContract.URI_QUESTIONS_CORRECT,
+                                    null, null, null, null);
 
-                } catch (Exception e) {
-                    Log.e(TAG, "Failed to asynchronously load data.");
-                    e.printStackTrace();
-                    return null;
-                }
-            }
+                        } catch (Exception e) {
+                            Log.e(TAG, "Failed to asynchronously load data.");
+                            e.printStackTrace();
+                            return null;
+                        }
+                    }
 
-            // deliverResult sends the result of the load, a Cursor, to the registered listener
-            public void deliverResult(Cursor data) {
-                scoreData = data;
-                super.deliverResult(data);
-            }
-        };
+                    // deliverResult sends the result of the load, a Cursor, to the registered listener
+                    public void deliverResult(Cursor data) {
+                        scoreData = data;
+                        super.deliverResult(data);
+                    }
+                };
+            case WRONG_QUESTIONS_LOADER:
+                return new AsyncTaskLoader<Cursor>(getContext()) {
+
+                    // Initialize a Cursor, this will hold all the task data
+                    Cursor wrongData = null;
+
+                    // onStartLoading() is called when a loader first starts loading data
+                    @Override
+                    protected void onStartLoading() {
+                        if (wrongData != null) {
+                            // Delivers any previously loaded data immediately
+                            deliverResult(wrongData);
+                        } else {
+                            // Force a new load
+                            forceLoad();
+                        }
+                    }
+
+                    // loadInBackground() performs asynchronous loading of data
+                    @Override
+                    public Cursor loadInBackground() {
+                        try {
+                            // Get the content resolver
+                            ContentResolver resolver = getActivity().getContentResolver();
+
+                            return resolver.query(QuestionContract.URI_QUESTIONS_WRONG,
+                                    null, null, null, null);
+
+                        } catch (Exception e) {
+                            Log.e(TAG, "Failed to asynchronously load data.");
+                            e.printStackTrace();
+                            return null;
+                        }
+                    }
+
+                    // deliverResult sends the result of the load, a Cursor, to the registered listener
+                    public void deliverResult(Cursor data) {
+                        wrongData = data;
+                        super.deliverResult(data);
+                    }
+                };
+
+            case FAVORITE_QUESTIONS_LOADER:
+                return new AsyncTaskLoader<Cursor>(getContext()) {
+
+                    // Initialize a Cursor, this will hold all the task data
+                    Cursor favoriteData = null;
+
+                    // onStartLoading() is called when a loader first starts loading data
+                    @Override
+                    protected void onStartLoading() {
+                        if (favoriteData != null) {
+                            // Delivers any previously loaded data immediately
+                            deliverResult(favoriteData);
+                        } else {
+                            // Force a new load
+                            forceLoad();
+                        }
+                    }
+
+                    // loadInBackground() performs asynchronous loading of data
+                    @Override
+                    public Cursor loadInBackground() {
+                        try {
+                            // Get the content resolver
+                            ContentResolver resolver = getActivity().getContentResolver();
+
+                            return resolver.query(QuestionContract.URI_QUESTIONS_FAVORITE,
+                                    null, null, null, null);
+
+                        } catch (Exception e) {
+                            Log.e(TAG, "Failed to asynchronously load data.");
+                            e.printStackTrace();
+                            return null;
+                        }
+                    }
+
+                    // deliverResult sends the result of the load, a Cursor, to the registered listener
+                    public void deliverResult(Cursor data) {
+                        favoriteData = data;
+                        super.deliverResult(data);
+                    }
+                };
+
+            default:
+                return null;
+
+        }
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.i(TAG, "The current score is: " + data.getCount() + "/" + Constants.TOTAL_QUESTIONS);
-        usecaseList.remove(3);
-        usecaseAdapter.notifyItemRemoved(3);
-        usecaseList.add(data.getCount() + "/" + Constants.TOTAL_QUESTIONS);
-        usecaseAdapter.notifyItemInserted(3);
+        switch (loader.getId()) {
+            case SCORE_LOADER:
+                Log.i(TAG, "The current score is: " + data.getCount() + "/" + Constants.TOTAL_QUESTIONS);
+                usecaseList.remove(3);
+                usecaseAdapter.notifyItemRemoved(3);
+                usecaseList.add(data.getCount() + "/" + Constants.TOTAL_QUESTIONS);
+                usecaseAdapter.notifyItemInserted(3);
+                break;
+            case WRONG_QUESTIONS_LOADER:
+                wrongQuestions = data.getCount();
+                break;
+            case FAVORITE_QUESTIONS_LOADER:
+                favoriteQuestions = data.getCount();
+                break;
+        }
     }
 
     @Override
