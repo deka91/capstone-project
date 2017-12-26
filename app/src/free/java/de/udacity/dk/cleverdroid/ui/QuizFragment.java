@@ -222,11 +222,13 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
     }
 
     private void checkIfQuestionIsInFavorites() {
-        if (questionBank.getFavorite(number) == 1) {
-            favorite.setIcon(R.drawable.ic_star_black_24dp);
-        } else {
-            favorite.setIcon(R.drawable
-                    .ic_star_border_black_24dp);
+        if (questionBank.getLength() > 0) {
+            if (questionBank.getFavorite(number) == 1) {
+                favorite.setIcon(R.drawable.ic_star_black_24dp);
+            } else {
+                favorite.setIcon(R.drawable
+                        .ic_star_border_black_24dp);
+            }
         }
     }
 
@@ -250,6 +252,9 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
             int realQuestionNumber = number + 1;
             questionNumber.setText(getString(R.string.quiz_title) + " " + realQuestionNumber + "/" + questionBank.getLength());
             question.setText(questionBank.getQuestion(number));
+            if(favorite != null){
+                checkIfQuestionIsInFavorites();
+            }
         } else if (number > 0) {
             // last question
             ResultFragment resultFragment = new ResultFragment();
