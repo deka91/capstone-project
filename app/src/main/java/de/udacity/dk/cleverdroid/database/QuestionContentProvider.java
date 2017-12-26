@@ -100,7 +100,7 @@ public class QuestionContentProvider extends ContentProvider {
                 break;
             case QUESTIONS_WRONG:
                 contentValues = new ContentValues();
-                contentValues.put(QuestionContract.QuestionColumns.CORRECT, 0);
+                contentValues.putNull(QuestionContract.QuestionColumns.CORRECT);
                 break;
             case QUESTIONS_FAVORITE:
                 contentValues = new ContentValues();
