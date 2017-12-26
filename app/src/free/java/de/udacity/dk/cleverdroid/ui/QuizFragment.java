@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -112,6 +113,9 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
         setHasOptionsMenu(true);
         ButterKnife.bind(this, view);
 
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.quiz_screen));
+
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             uriString = bundle.getString(getString(R.string.key_usecase));
@@ -132,6 +136,17 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
         menu.findItem(R.id.action_settings).setVisible(false);
         menu.findItem(R.id.action_about).setVisible(false);
         super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

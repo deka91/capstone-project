@@ -7,9 +7,13 @@
     <string name="key_usecase">usecase</string>
     <string name="key_score">score</string>
     <string name="key_questions_amount">questions_amount</string>
+    <string name="quiz_screen">Quiz</string>
     <string name="quiz_title">Question</string>
     <string name="quiz_next">Next</string>
     <string name="quiz_back">Back</string>
+    <string name="result_screen">Result</string>
+    <string name="settings_screen">Settings</string>
+    <string name="about_screen">About</string>
     <string name="result_title">Your Score</string>
     <string name="result_try_again">Try again</string>
     <string name="action_settings">Settings</string>

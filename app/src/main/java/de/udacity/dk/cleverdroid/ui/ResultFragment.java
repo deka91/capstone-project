@@ -3,6 +3,7 @@ package de.udacity.dk.cleverdroid.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -32,6 +33,8 @@ public class ResultFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_result, container, false);
         setHasOptionsMenu(true);
         ButterKnife.bind(this, view);
+
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.result_screen));
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {

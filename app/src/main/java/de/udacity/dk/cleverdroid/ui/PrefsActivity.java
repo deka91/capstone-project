@@ -26,6 +26,7 @@ public class PrefsActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getString(R.string.settings_screen));
 
         getFragmentManager().beginTransaction().replace(R.id.content_frame, new MyPreferenceFragment()).commit();
     }

@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -57,6 +58,9 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         View view = inflater.inflate(R.layout.fragment_main,
                 container, false);
         recyclerView = view.findViewById(R.id.recycler_cards);
+
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.app_name));
 
         RecyclerViewClickListener listener = new RecyclerViewClickListener() {
             @Override
