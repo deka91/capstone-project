@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -23,7 +24,6 @@ public class ResultFragment extends Fragment {
     private String uriString;
 
     public ResultFragment() {
-        // Required empty public constructor
     }
 
 
@@ -59,6 +59,17 @@ public class ResultFragment extends Fragment {
     void repeateQuestions(View view) {
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, QuizFragment.newInstance()).addToBackStack(null).commit();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 
