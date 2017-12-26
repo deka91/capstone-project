@@ -33,18 +33,10 @@ public class ResultActivity extends AppCompatActivity {
             }
 
             ResultFragment resultFragment = new ResultFragment();
-            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, resultFragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, resultFragment).commit();
         }
 
-
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.quiz_menu, menu);
-//        return true;
-//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

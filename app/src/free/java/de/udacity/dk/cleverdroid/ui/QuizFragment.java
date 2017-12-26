@@ -252,7 +252,7 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
             int realQuestionNumber = number + 1;
             questionNumber.setText(getString(R.string.quiz_title) + " " + realQuestionNumber + "/" + questionBank.getLength());
             question.setText(questionBank.getQuestion(number));
-            if(favorite != null){
+            if (favorite != null) {
                 checkIfQuestionIsInFavorites();
             }
         } else if (number > 0) {

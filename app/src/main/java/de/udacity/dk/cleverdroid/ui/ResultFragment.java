@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -42,16 +43,14 @@ public class ResultFragment extends Fragment {
             score.setText(userScore + "/" + questionsAmount);
         }
 
-
         return view;
     }
 
-//    @Override
-//    public void onPrepareOptionsMenu(Menu menu) {
-//        menu.findItem(R.id.action_settings).setVisible(false);
-//        menu.findItem(R.id.action_about).setVisible(false);
-//        super.onPrepareOptionsMenu(menu);
-//    }
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_favorite).setVisible(false);
+        super.onPrepareOptionsMenu(menu);
+    }
 
     @OnClick(R.id.bt_again)
     void repeateQuestions(View view) {
