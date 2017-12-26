@@ -146,6 +146,7 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
         super.onCreateOptionsMenu(menu, inflater);
 
         favorite = menu.findItem(R.id.action_favorite);
+        checkIfQuestionIsInFavorites();
         favorite.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -249,9 +250,6 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
             int realQuestionNumber = number + 1;
             questionNumber.setText(getString(R.string.quiz_title) + " " + realQuestionNumber + "/" + questionBank.getLength());
             question.setText(questionBank.getQuestion(number));
-            if (favorite != null) {
-                checkIfQuestionIsInFavorites();
-            }
         } else if (number > 0) {
             // last question
             ResultFragment resultFragment = new ResultFragment();
@@ -384,7 +382,7 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
                             ContentValues values = new ContentValues();
                             values.put(QuestionContract.QuestionColumns.FAVORITE, 0);
 
-                            Uri uri = Uri.parse(QuestionContract.URI_QUESTIONS + "/" + number);
+                            Uri uri = Uri.parse(QuestionContract.URI_QUESTIONS + "/" + questionBank.getId(number));
 
                             return getActivity().getContentResolver().update
                                     (uri,
@@ -405,7 +403,7 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
                             ContentValues values = new ContentValues();
                             values.put(QuestionContract.QuestionColumns.FAVORITE, 1);
 
-                            Uri uri = Uri.parse(QuestionContract.URI_QUESTIONS + "/" + number);
+                            Uri uri = Uri.parse(QuestionContract.URI_QUESTIONS + "/" + questionBank.getId(number));
 
                             return getActivity().getContentResolver().update
                                     (uri,

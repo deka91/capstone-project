@@ -16,7 +16,8 @@ public class Question {
 
     }
 
-    public Question(int type, int favorite, String question, String[] choice, String answer) {
+    public Question(int id, int type, int favorite, String question, String[] choice, String answer) {
+        this.id = id;
         this.type = type;
         this.favorite = favorite;
         this.question = question;

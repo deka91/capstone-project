@@ -103,7 +103,6 @@ public class QuestionContentProvider extends ContentProvider {
                 contentValues.put(QuestionContract.QuestionColumns.CORRECT, 0);
                 break;
             case QUESTIONS_FAVORITE:
-                // UPDATE Question SET favorite=0
                 contentValues = new ContentValues();
                 contentValues.put(QuestionContract.QuestionColumns.FAVORITE, 0);
                 break;
