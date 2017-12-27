@@ -91,7 +91,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
                         tracker.setScreenName(Constants.SCREEN_QUESTIONS_WRONG);
                         if (wrongQuestions == 0) {
                             startQuiz = false;
-                            Toast.makeText(getContext(), "You don't have wrong answered questions.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getString(R.string.main_no_wrong_questions), Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case 2:
@@ -101,7 +101,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
                         tracker.setScreenName(Constants.SCREEN_QUESTIONS_FAVORITE);
                         if (favoriteQuestions == 0) {
                             startQuiz = false;
-                            Toast.makeText(getContext(), "You don't have favorite marked questions.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getString(R.string.main_no_favorites), Toast.LENGTH_SHORT).show();
                         }
                         break;
                 }

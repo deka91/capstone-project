@@ -41,7 +41,7 @@ public class ResultFragment extends Fragment {
         if (bundle != null) {
             int userScore = bundle.getInt(getString(R.string.key_score));
             int questionsAmount = bundle.getInt(getString(R.string.key_questions_amount));
-            uriString = bundle.getString("uri");
+            uriString = bundle.getString(getString(R.string.key_uri));
             score.setText(userScore + "/" + questionsAmount);
         }
 

@@ -107,12 +107,12 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            if (savedInstanceState.getParcelable("questionBank") != null) {
-                questionBank = savedInstanceState.getParcelable("questionBank");
+            if (savedInstanceState.getParcelable(getString(R.string.key_question_bank)) != null) {
+                questionBank = savedInstanceState.getParcelable(getString(R.string.key_question_bank));
             }
 
-            if (savedInstanceState.getParcelable("questionBank") != null) {
-                number = savedInstanceState.getInt("questionNumber");
+            if (savedInstanceState.getInt(getString(R.string.key_question_number)) != 0) {
+                number = savedInstanceState.getInt(getString(R.string.key_question_number));
             }
         } else {
             questionBank = new QuestionBank();
@@ -397,7 +397,7 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
         if ((clickCounter == 0 && !questionIsAnswered)) {
             if (questionBank.getType(number) == 1) {
                 if (radioGroupSingleChoice.getCheckedRadioButtonId() == -1) {
-                    Toast.makeText(getActivity(), "Please answer the question.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.quiz_info_message), Toast.LENGTH_SHORT).show();
                 } else {
                     showAnswer(1);
                 }
@@ -486,7 +486,7 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable("questionBank", questionBank);
-        outState.putInt("questionNumber", number);
+        outState.putParcelable(getString(R.string.key_question_bank), questionBank);
+        outState.putInt(getString(R.string.key_question_number), number);
     }
 }

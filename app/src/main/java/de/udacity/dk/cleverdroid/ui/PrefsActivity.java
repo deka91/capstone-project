@@ -37,20 +37,20 @@ public class PrefsActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
 
-            Preference progress = findPreference("progress");
+            Preference progress = findPreference(getString(R.string.key_progress));
             progress.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 public boolean onPreferenceClick(Preference preference) {
                     getActivity().getContentResolver().update(QuestionContract.URI_QUESTIONS_WRONG, null, null, null);
-                    Toast.makeText(getActivity(), "Your progress was deleted!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.pref_progress_message), Toast.LENGTH_SHORT).show();
                     return true;
                 }
             });
 
-            Preference favorites = findPreference("favorites");
+            Preference favorites = findPreference(getString(R.string.key_favorites));
             favorites.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 public boolean onPreferenceClick(Preference preference) {
                     getActivity().getContentResolver().update(QuestionContract.URI_QUESTIONS_FAVORITE, null, null, null);
-                    Toast.makeText(getActivity(), "Your favorites were deleted!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.pref_favorites_message), Toast.LENGTH_SHORT).show();
                     return true;
                 }
             });
