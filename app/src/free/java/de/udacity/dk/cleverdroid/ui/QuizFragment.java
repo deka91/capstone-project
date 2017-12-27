@@ -42,7 +42,7 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
 
     public static final String TAG = QuizFragment.class.getSimpleName();
     private static final int LOADER_ID = 0x02;
-    private QuestionBank questionBank = new QuestionBank();
+    private QuestionBank questionBank;
     private String correctAnswer;
     private int score;
     private int number = 0;
@@ -97,19 +97,24 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
     AdView banner;
 
     public QuizFragment() {
-
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
+        if (savedInstanceState != null) {
+            if (savedInstanceState.getParcelable("questionBank") != null) {
+                questionBank = savedInstanceState.getParcelable("questionBank");
+            }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        getLoaderManager().initLoader(LOADER_ID, null, this);
-        super.onActivityCreated(savedInstanceState);
+            if (savedInstanceState.getParcelable("questionBank") != null) {
+                number = savedInstanceState.getInt("questionNumber");
+            }
+        } else {
+            questionBank = new QuestionBank();
+        }
+        getActivity().getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -125,8 +130,6 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
         if (bundle != null) {
             uriString = bundle.getString(getString(R.string.key_usecase));
         }
-
-        getLoaderManager().initLoader(LOADER_ID, null, this);
 
         AdRequest adRequest = new AdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
@@ -181,6 +184,7 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
                 }
             }
 
+
             // loadInBackground() performs asynchronous loading of data
             @Override
             public Cursor loadInBackground() {
@@ -212,7 +216,9 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         QuestionDbHelper questionDbHelper = new QuestionDbHelper(getContext());
         questionDbHelper.setCursor(data);
-        questionBank.initQuestions(questionDbHelper);
+        if (questionBank != null && questionBank.getLength() == 0) {
+            questionBank.initQuestions(questionDbHelper);
+        }
         updateQuestion();
     }
 
@@ -426,13 +432,19 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
         }.execute();
     }
 
-    public static QuizFragment newInstance() {
-        QuizFragment quizFragment = new QuizFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("usecase", QuestionContract.URI_QUESTIONS.toString());
-        quizFragment.setArguments(bundle);
+//    public static QuizFragment newInstance() {
+//        QuizFragment quizFragment = new QuizFragment();
+//        Bundle bundle = new Bundle();
+//        bundle.putString("usecase", QuestionContract.URI_QUESTIONS.toString());
+//        quizFragment.setArguments(bundle);
+//
+//        return quizFragment;
+//    }
 
-        return quizFragment;
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("questionBank", questionBank);
+        outState.putInt("questionNumber", number);
     }
-
 }

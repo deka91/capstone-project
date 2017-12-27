@@ -55,9 +55,9 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         tracker = application.getDefaultTracker();
         prepareUsecaseData();
 
-        getLoaderManager().initLoader(SCORE_LOADER, null, this);
-        getLoaderManager().initLoader(WRONG_QUESTIONS_LOADER, null, this);
-        getLoaderManager().initLoader(FAVORITE_QUESTIONS_LOADER, null, this);
+        getActivity().getSupportLoaderManager().initLoader(SCORE_LOADER, null, this);
+        getActivity().getSupportLoaderManager().initLoader(WRONG_QUESTIONS_LOADER, null, this);
+        getActivity().getSupportLoaderManager().initLoader(FAVORITE_QUESTIONS_LOADER, null, this);
     }
 
     @Override
@@ -131,9 +131,9 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onResume() {
         super.onResume();
-        getLoaderManager().restartLoader(SCORE_LOADER, null, this);
-        getLoaderManager().restartLoader(WRONG_QUESTIONS_LOADER, null, this);
-        getLoaderManager().restartLoader(FAVORITE_QUESTIONS_LOADER, null, this);
+        getActivity().getSupportLoaderManager().restartLoader(SCORE_LOADER, null, this);
+        getActivity().getSupportLoaderManager().restartLoader(WRONG_QUESTIONS_LOADER, null, this);
+        getActivity().getSupportLoaderManager().restartLoader(FAVORITE_QUESTIONS_LOADER, null, this);
     }
 
     private void prepareUsecaseData() {

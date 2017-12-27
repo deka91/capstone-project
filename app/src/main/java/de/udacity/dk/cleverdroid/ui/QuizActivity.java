@@ -30,7 +30,11 @@ public class QuizActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
-        if (intent != null && intent.getStringExtra(getString(R.string.key_usecase)) != null) {
+
+
+        android.support.v4.app.Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+
+        if (fragment == null && intent != null && intent.getStringExtra(getString(R.string.key_usecase)) != null) {
             String usecase = intent.getStringExtra(getString(R.string.key_usecase));
             Bundle bundle = new Bundle();
             bundle.putString(getString(R.string.key_usecase), usecase);

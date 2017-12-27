@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import de.udacity.dk.cleverdroid.R;
 
 public class ResultFragment extends Fragment {
@@ -52,11 +51,11 @@ public class ResultFragment extends Fragment {
         super.onPrepareOptionsMenu(menu);
     }
 
-    @OnClick(R.id.bt_again)
-    void repeateQuestions(View view) {
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, QuizFragment.newInstance()).addToBackStack(null).commit();
-    }
+//    @OnClick(R.id.bt_again)
+//    void repeateQuestions(View view) {
+//        getActivity().getSupportFragmentManager().beginTransaction()
+//                .replace(R.id.fragment_container, QuizFragment.newInstance()).addToBackStack(null).commit();
+//    }
 
 
 }
