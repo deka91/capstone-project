@@ -1,9 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     tools:context="de.udacity.dk.cleverdroid.ui.QuizActivity">
 
     <TextView
@@ -14,6 +14,7 @@
         android:gravity="center"
         android:text="@string/quiz_title"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Title" />
+
 
     <android.support.v7.widget.CardView
         android:id="@+id/question_and_answers"
@@ -136,6 +137,17 @@
         android:textColor="@android:color/white"
         android:textStyle="bold"
         tools:text="This is the answer" />
+
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@id/bt_next"
+        android:layout_toRightOf="@id/bt_back"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-3940256099942544/5224354917"></com.google.android.gms.ads.AdView>
 
     <Button
         android:id="@+id/bt_back"

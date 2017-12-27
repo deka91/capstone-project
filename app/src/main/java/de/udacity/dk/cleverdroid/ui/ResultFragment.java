@@ -1,6 +1,7 @@
 package de.udacity.dk.cleverdroid.ui;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +13,9 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.udacity.dk.cleverdroid.R;
+import de.udacity.dk.cleverdroid.database.QuestionContract;
 
 public class ResultFragment extends Fragment {
 
@@ -51,11 +54,12 @@ public class ResultFragment extends Fragment {
         super.onPrepareOptionsMenu(menu);
     }
 
-//    @OnClick(R.id.bt_again)
-//    void repeateQuestions(View view) {
-//        getActivity().getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.fragment_container, QuizFragment.newInstance()).addToBackStack(null).commit();
-//    }
+    @OnClick(R.id.bt_again)
+    void repeateQuestions(View view) {
+        Intent intent = new Intent(getActivity(), QuizActivity.class);
+        intent.putExtra(getString(R.string.key_usecase), QuestionContract.URI_QUESTIONS.toString());
+        startActivity(intent);
+    }
 
 
 }

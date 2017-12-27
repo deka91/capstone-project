@@ -30,6 +30,9 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -43,6 +46,7 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
     public static final String TAG = QuizFragment.class.getSimpleName();
     private static final int LOADER_ID = 0x02;
     private QuestionBank questionBank;
+    private Map<Integer, Integer> userSelection;
     private String correctAnswer;
     private int score;
     private int number = 0;
@@ -112,6 +116,7 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
             }
         } else {
             questionBank = new QuestionBank();
+            userSelection = new HashMap<>();
         }
         getActivity().getSupportLoaderManager().initLoader(LOADER_ID, null, this);
         setHasOptionsMenu(true);
@@ -290,66 +295,106 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
 
     private void showAnswer(int type) {
         String userAnswer = "";
+        int checkedRadioButtonId = 0;
         if (number < questionBank.getLength()) {
-            switch (type) {
-                case 1:
-                    int checkedRadioButtonId = radioGroupSingleChoice.getCheckedRadioButtonId();
+            if (!userSelection.containsKey(questionBank.getId(number))) {
+                switch (type) {
+                    case 1:
+                        checkedRadioButtonId = radioGroupSingleChoice.getCheckedRadioButtonId();
 
-                    switch (checkedRadioButtonId) {
-                        case R.id.rb_choice1:
-                            userAnswer = (String) singleChoice1.getText();
-                            break;
-                        case R.id.rb_choice2:
-                            userAnswer = (String) singleChoice2.getText();
-                            break;
+                        switch (checkedRadioButtonId) {
+                            case R.id.rb_choice1:
+                                userAnswer = (String) singleChoice1.getText();
+                                break;
+                            case R.id.rb_choice2:
+                                userAnswer = (String) singleChoice2.getText();
+                                break;
 
-                        case R.id.rb_choice3:
-                            userAnswer = (String) singleChoice3.getText();
-                            break;
+                            case R.id.rb_choice3:
+                                userAnswer = (String) singleChoice3.getText();
+                                break;
 
-                        case R.id.rb_choice4:
-                            userAnswer = (String) singleChoice4.getText();
-                            break;
-                    }
+                            case R.id.rb_choice4:
+                                userAnswer = (String) singleChoice4.getText();
+                                break;
+                        }
 
-                    for (int i = 0; i < radioGroupSingleChoice.getChildCount(); i++) {
-                        radioGroupSingleChoice.getChildAt(i).setEnabled(false);
-                    }
-                    break;
+                        for (int i = 0; i < radioGroupSingleChoice.getChildCount(); i++) {
+                            radioGroupSingleChoice.getChildAt(i).setEnabled(false);
+                        }
+                        break;
 
-                case 2:
-                    break;
+                    case 2:
+                        break;
 
+                }
+            } else {
+                int storedCheckedRadioButtonId = userSelection.get(questionBank.getId(number));
+
+                switch (storedCheckedRadioButtonId) {
+                    case R.id.rb_choice1:
+                        singleChoice1.setChecked(true);
+                        userAnswer = (String) singleChoice1.getText();
+                        break;
+                    case R.id.rb_choice2:
+                        singleChoice2.setChecked(true);
+                        userAnswer = (String) singleChoice2.getText();
+                        break;
+                    case R.id.rb_choice3:
+                        singleChoice3.setChecked(true);
+                        userAnswer = (String) singleChoice3.getText();
+                        break;
+                    case R.id.rb_choice4:
+                        singleChoice4.setChecked(true);
+                        userAnswer = (String) singleChoice4.getText();
+                        break;
+                }
+
+                for (int i = 0; i < radioGroupSingleChoice.getChildCount(); i++) {
+                    radioGroupSingleChoice.getChildAt(i).setEnabled(false);
+                }
             }
 
             correctAnswer = questionBank.getCorrectAnswer(number);
             answer.setText(correctAnswer);
             answer.setVisibility(View.VISIBLE);
-            ContentResolver resolver = getActivity().getContentResolver();
-            ContentValues values = new ContentValues();
 
             if (correctAnswer.equals(userAnswer)) {
-                values.put(QuestionContract.QuestionColumns.CORRECT, 1);
                 answer.setBackgroundColor(getResources().getColor(R.color.correctBackground));
-                score = score + 1;
             } else {
-                values.put(QuestionContract.QuestionColumns.CORRECT, 0);
                 answer.setBackgroundColor(getResources().getColor(R.color.wrongBackground));
             }
 
-            Uri uri = Uri.parse(QuestionContract.URI_QUESTIONS + "/" + questionBank.getId(number));
+            if (!userSelection.containsKey(questionBank.getId(number))) {
+                ContentResolver resolver = getActivity().getContentResolver();
+                ContentValues values = new ContentValues();
 
-            resolver.update(uri,
-                    values, null, null);
+                if (correctAnswer.equals(userAnswer)) {
+                    values.put(QuestionContract.QuestionColumns.CORRECT, 1);
+                    answer.setBackgroundColor(getResources().getColor(R.color.correctBackground));
+                    score = score + 1;
+                } else {
+                    values.put(QuestionContract.QuestionColumns.CORRECT, 0);
+                    answer.setBackgroundColor(getResources().getColor(R.color.wrongBackground));
+                }
+
+                Uri uri = Uri.parse(QuestionContract.URI_QUESTIONS + "/" + questionBank.getId(number));
+
+                resolver.update(uri,
+                        values, null, null);
+
+                userSelection.put(questionBank.getId(number), checkedRadioButtonId);
+            }
 
             clickCounter++;
+
         }
     }
 
     @OnClick(R.id.bt_next)
     void nextQuestion(View view) {
         // Singlechoice
-        if (clickCounter == 0 && !questionIsAnswered) {
+        if ((clickCounter == 0 && !questionIsAnswered)) {
             if (questionBank.getType(number) == 1) {
                 if (radioGroupSingleChoice.getCheckedRadioButtonId() == -1) {
                     Toast.makeText(getActivity(), "Please answer the question.", Toast.LENGTH_SHORT).show();
@@ -365,15 +410,21 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
         } else {
             updateUserInterface();
             updateQuestion();
+            if (number < questionBank.getLength() && userSelection.containsKey(questionBank.getId(number))) {
+                showAnswer(1);
+            }
         }
     }
 
     @OnClick(R.id.bt_back)
     void previousQuestion(View view) {
-        questionIsAnswered = true;
-        number = number - 1;
-        updateQuestion();
-        showAnswer(questionBank.getType(number));
+        if (number != 0) {
+            number = number - 1;
+            questionIsAnswered = true;
+            updateQuestion();
+            clickCounter = 0;
+            showAnswer(questionBank.getType(number));
+        }
     }
 
     private void addToFavorites() {
@@ -431,15 +482,6 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
             }
         }.execute();
     }
-
-//    public static QuizFragment newInstance() {
-//        QuizFragment quizFragment = new QuizFragment();
-//        Bundle bundle = new Bundle();
-//        bundle.putString("usecase", QuestionContract.URI_QUESTIONS.toString());
-//        quizFragment.setArguments(bundle);
-//
-//        return quizFragment;
-//    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
