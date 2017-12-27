@@ -23,10 +23,7 @@
         </activity>
         <activity android:name=".ui.PrefsActivity" />
         <activity android:name=".ui.QuizActivity" />
-        <activity
-            android:name=".ui.AboutActivity"
-            android:label="@string/title_activity_about"
-            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ui.AboutActivity" />
 
         <provider
             android:name=".database.QuestionContentProvider"
