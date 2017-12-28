@@ -22,7 +22,6 @@
             android:id="@+id/tv_score"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_result_title"
             android:gravity="center"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
             tools:text="11/20" />
