@@ -30,7 +30,6 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,7 +44,7 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
     public static final String TAG = QuizFragment.class.getSimpleName();
     private static final int LOADER_ID = 0x02;
     private QuestionBank questionBank;
-    private Map<Integer, Integer> userSelection;
+    private HashMap<Integer, Integer> userSelection;
     private int score;
     private int number = 0;
     private int clickCounter = 0;
@@ -89,6 +88,10 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
+            if (savedInstanceState.getSerializable(getString(R.string.key_user_selection)) != null) {
+                userSelection = (HashMap<Integer, Integer>) savedInstanceState.getSerializable(getString(R.string.key_user_selection));
+            }
+
             if (savedInstanceState.getParcelable(getString(R.string.key_question_bank)) != null) {
                 questionBank = savedInstanceState.getParcelable(getString(R.string.key_question_bank));
             }
@@ -100,6 +103,7 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
             questionBank = new QuestionBank();
             userSelection = new HashMap<>();
         }
+
         getActivity().getSupportLoaderManager().initLoader(LOADER_ID, null, this);
         setHasOptionsMenu(true);
     }
@@ -453,6 +457,7 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putSerializable(getString(R.string.key_user_selection), userSelection);
         outState.putParcelable(getString(R.string.key_question_bank), questionBank);
         outState.putInt(getString(R.string.key_question_number), number);
     }
