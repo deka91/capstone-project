@@ -221,7 +221,6 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
 
     private void updateQuestion() {
         if (number < questionBank.getLength() && number >= 0) {
-            singleChoiceLayout.setVisibility(View.VISIBLE);
             singleChoice1.setText(questionBank.getChoice(number, 1));
             singleChoice2.setText(questionBank.getChoice(number, 2));
             singleChoice3.setText(questionBank.getChoice(number, 3));
