@@ -234,7 +234,7 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
 
     private void checkIfQuestionIsInFavorites() {
         if (questionBank.getLength() > 0) {
-            if (questionBank.getFavorite(number) == 1) {
+            if (isInFavorites(questionBank.getId(number)) == 1) {
                 favorite.setIcon(R.drawable.ic_star_black_24dp);
             } else {
                 favorite.setIcon(R.drawable
