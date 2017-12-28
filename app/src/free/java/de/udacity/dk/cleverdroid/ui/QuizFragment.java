@@ -20,7 +20,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -53,7 +52,6 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
     private int clickCounter = 0;
     private String uriString;
     private MenuItem favorite;
-    private boolean questionIsAnswered;
 
     @BindView(R.id.tv_question_number)
     TextView questionNumber;
@@ -64,23 +62,8 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
     @BindView(R.id.tv_answer)
     TextView answer;
 
-    @BindView(R.id.layout_multiplechoice)
-    LinearLayout multipleChoiceLayout;
-
     @BindView(R.id.layout_singlechoice)
     LinearLayout singleChoiceLayout;
-
-    @BindView(R.id.cb_choice1)
-    CheckBox multipleChoice1;
-
-    @BindView(R.id.cb_choice2)
-    CheckBox multipleChoice2;
-
-    @BindView(R.id.cb_choice3)
-    CheckBox multipleChoice3;
-
-    @BindView(R.id.cb_choice4)
-    CheckBox multipleChoice4;
 
     @BindView(R.id.rg_singlechoice)
     RadioGroup radioGroupSingleChoice;
@@ -245,21 +228,11 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
 
     private void updateQuestion() {
         if (number < questionBank.getLength() && number >= 0) {
-            if (questionBank.getType(number) == 1) {
-                // Single Choice
-                singleChoiceLayout.setVisibility(View.VISIBLE);
-                singleChoice1.setText(questionBank.getChoice(number, 1));
-                singleChoice2.setText(questionBank.getChoice(number, 2));
-                singleChoice3.setText(questionBank.getChoice(number, 3));
-                singleChoice4.setText(questionBank.getChoice(number, 4));
-            } else {
-                // Multiple Choice
-                multipleChoiceLayout.setVisibility(View.VISIBLE);
-                multipleChoice1.setText(questionBank.getChoice(number, 1));
-                multipleChoice2.setText(questionBank.getChoice(number, 2));
-                multipleChoice3.setText(questionBank.getChoice(number, 3));
-                multipleChoice4.setText(questionBank.getChoice(number, 4));
-            }
+            singleChoiceLayout.setVisibility(View.VISIBLE);
+            singleChoice1.setText(questionBank.getChoice(number, 1));
+            singleChoice2.setText(questionBank.getChoice(number, 2));
+            singleChoice3.setText(questionBank.getChoice(number, 3));
+            singleChoice4.setText(questionBank.getChoice(number, 4));
             int realQuestionNumber = number + 1;
             questionNumber.setText(getString(R.string.quiz_title) + " " + realQuestionNumber + "/" + questionBank.getLength());
             question.setText(questionBank.getQuestion(number));
@@ -281,52 +254,45 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
     }
 
     private void updateUserInterface() {
-        if (!questionIsAnswered) {
-            radioGroupSingleChoice.clearCheck();
-            for (int i = 0; i < radioGroupSingleChoice.getChildCount(); i++) {
-                radioGroupSingleChoice.getChildAt(i).setEnabled(true);
+        if (number + 1 < questionBank.getLength()) {
+            if (!userSelection.containsKey(questionBank.getId(number + 1))) {
+                radioGroupSingleChoice.clearCheck();
+                for (int i = 0; i < radioGroupSingleChoice.getChildCount(); i++) {
+                    radioGroupSingleChoice.getChildAt(i).setEnabled(true);
+                }
+                answer.setVisibility(View.INVISIBLE);
             }
-            answer.setVisibility(View.INVISIBLE);
         }
         number++;
         clickCounter = 0;
-        questionIsAnswered = false;
     }
 
-    private void showAnswer(int type) {
+    private void showAnswer() {
         String userAnswer = "";
         int checkedRadioButtonId = 0;
         if (number < questionBank.getLength()) {
             if (!userSelection.containsKey(questionBank.getId(number))) {
-                switch (type) {
-                    case 1:
-                        checkedRadioButtonId = radioGroupSingleChoice.getCheckedRadioButtonId();
+                checkedRadioButtonId = radioGroupSingleChoice.getCheckedRadioButtonId();
 
-                        switch (checkedRadioButtonId) {
-                            case R.id.rb_choice1:
-                                userAnswer = (String) singleChoice1.getText();
-                                break;
-                            case R.id.rb_choice2:
-                                userAnswer = (String) singleChoice2.getText();
-                                break;
-
-                            case R.id.rb_choice3:
-                                userAnswer = (String) singleChoice3.getText();
-                                break;
-
-                            case R.id.rb_choice4:
-                                userAnswer = (String) singleChoice4.getText();
-                                break;
-                        }
-
-                        for (int i = 0; i < radioGroupSingleChoice.getChildCount(); i++) {
-                            radioGroupSingleChoice.getChildAt(i).setEnabled(false);
-                        }
+                switch (checkedRadioButtonId) {
+                    case R.id.rb_choice1:
+                        userAnswer = (String) singleChoice1.getText();
+                        break;
+                    case R.id.rb_choice2:
+                        userAnswer = (String) singleChoice2.getText();
                         break;
 
-                    case 2:
+                    case R.id.rb_choice3:
+                        userAnswer = (String) singleChoice3.getText();
                         break;
 
+                    case R.id.rb_choice4:
+                        userAnswer = (String) singleChoice4.getText();
+                        break;
+                }
+
+                for (int i = 0; i < radioGroupSingleChoice.getChildCount(); i++) {
+                    radioGroupSingleChoice.getChildAt(i).setEnabled(false);
                 }
             } else {
                 int storedCheckedRadioButtonId = userSelection.get(questionBank.getId(number));
@@ -392,38 +358,29 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
     }
 
     @OnClick(R.id.bt_next)
-    void nextQuestion(View view) {
-        // Singlechoice
-        if ((clickCounter == 0 && !questionIsAnswered)) {
-            if (questionBank.getType(number) == 1) {
-                if (radioGroupSingleChoice.getCheckedRadioButtonId() == -1) {
-                    Toast.makeText(getActivity(), getString(R.string.quiz_info_message), Toast.LENGTH_SHORT).show();
-                } else {
-                    showAnswer(1);
-                }
-
-            } else if (questionBank.getType(number) == 2) {
-                showAnswer(2);
+    void nextQuestion() {
+        if ((clickCounter == 0 && !userSelection.containsKey(questionBank.getId(number)))) {
+            if (radioGroupSingleChoice.getCheckedRadioButtonId() == -1) {
+                Toast.makeText(getActivity(), getString(R.string.quiz_info_message), Toast.LENGTH_SHORT).show();
+            } else {
+                showAnswer();
             }
-
-
-        } else {
+        } else if (number < questionBank.getLength()) {
             updateUserInterface();
             updateQuestion();
             if (number < questionBank.getLength() && userSelection.containsKey(questionBank.getId(number))) {
-                showAnswer(1);
+                showAnswer();
             }
         }
     }
 
     @OnClick(R.id.bt_back)
-    void previousQuestion(View view) {
+    void previousQuestion() {
         if (number != 0) {
             number = number - 1;
-            questionIsAnswered = true;
             updateQuestion();
             clickCounter = 0;
-            showAnswer(questionBank.getType(number));
+            showAnswer();
         }
     }
 
@@ -495,6 +452,7 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
         Cursor cursor = resolver.query(QuestionContract.URI_QUESTIONS,
                 null, QuestionContract.QuestionColumns._ID + " = ? AND " + QuestionContract.QuestionColumns.FAVORITE + " = 1",
                 new String[]{"" + id}, null);
+        cursor.close();
         return cursor.getCount();
     }
 }

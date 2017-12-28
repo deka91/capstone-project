@@ -88,40 +88,6 @@
                         tools:text="Android" />
                 </RadioGroup>
             </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_multiplechoice"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:visibility="gone">
-
-                <CheckBox
-                    android:id="@+id/cb_choice1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="Android" />
-
-                <CheckBox
-                    android:id="@+id/cb_choice2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="Android" />
-
-                <CheckBox
-                    android:id="@+id/cb_choice3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="Android" />
-
-                <CheckBox
-                    android:id="@+id/cb_choice4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="Android" />
-            </LinearLayout>
-
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
