@@ -429,10 +429,9 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
 
     private void addToFavorites() {
         new AsyncTask<Void, Void, Integer>() {
-
             @Override
             protected Integer doInBackground(Void... params) {
-                return questionBank.getFavorite(number);
+                return isInFavorites(questionBank.getId(number));
             }
 
             @Override
@@ -488,5 +487,14 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
         super.onSaveInstanceState(outState);
         outState.putParcelable(getString(R.string.key_question_bank), questionBank);
         outState.putInt(getString(R.string.key_question_number), number);
+    }
+
+    private int isInFavorites(int id) {
+        ContentResolver resolver = getActivity().getContentResolver();
+
+        Cursor cursor = resolver.query(QuestionContract.URI_QUESTIONS,
+                null, QuestionContract.QuestionColumns._ID + " = ? AND " + QuestionContract.QuestionColumns.FAVORITE + " = 1",
+                new String[]{"" + id}, null);
+        return cursor.getCount();
     }
 }
