@@ -1,10 +1,13 @@
 package de.udacity.dk.cleverdroid.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Deniz Kalem on 12.12.2017.
  */
 
-public class Question {
+public class Question implements Parcelable {
     private int id;
     private int type;
     private int favorite;
@@ -75,4 +78,40 @@ public class Question {
     public void setId(int id) {
         this.id = id;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeInt(this.type);
+        dest.writeInt(this.favorite);
+        dest.writeString(this.question);
+        dest.writeStringArray(this.choice);
+        dest.writeString(this.answer);
+    }
+
+    protected Question(Parcel in) {
+        this.id = in.readInt();
+        this.type = in.readInt();
+        this.favorite = in.readInt();
+        this.question = in.readString();
+        this.choice = in.createStringArray();
+        this.answer = in.readString();
+    }
+
+    public static final Creator<Question> CREATOR = new Creator<Question>() {
+        @Override
+        public Question createFromParcel(Parcel source) {
+            return new Question(source);
+        }
+
+        @Override
+        public Question[] newArray(int size) {
+            return new Question[size];
+        }
+    };
 }
