@@ -46,7 +46,6 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
     private static final int LOADER_ID = 0x02;
     private QuestionBank questionBank;
     private Map<Integer, Integer> userSelection;
-    private String correctAnswer;
     private int score;
     private int number = 0;
     private int clickCounter = 0;
@@ -137,7 +136,6 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
         super.onCreateOptionsMenu(menu, inflater);
 
         favorite = menu.findItem(R.id.action_favorite);
-        checkIfQuestionIsInFavorites();
         favorite.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -145,6 +143,8 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
                 return true;
             }
         });
+
+        checkIfQuestionIsInFavorites();
     }
 
     @Override
@@ -215,17 +215,6 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
 
     }
 
-    private void checkIfQuestionIsInFavorites() {
-        if (questionBank.getLength() > 0) {
-            if (isInFavorites(questionBank.getId(number)) == 1) {
-                favorite.setIcon(R.drawable.ic_star_black_24dp);
-            } else {
-                favorite.setIcon(R.drawable
-                        .ic_star_border_black_24dp);
-            }
-        }
-    }
-
     private void updateQuestion() {
         if (number < questionBank.getLength() && number >= 0) {
             singleChoiceLayout.setVisibility(View.VISIBLE);
@@ -245,26 +234,12 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
             Bundle bundle = new Bundle();
             bundle.putInt(getString(R.string.key_score), score);
             bundle.putInt(getString(R.string.key_questions_amount), questionBank.getLength());
-            bundle.putString("uri", uriString);
+            bundle.putString(getString(R.string.key_uri), uriString);
             resultFragment.setArguments(bundle);
 
             getActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, resultFragment).commit();
         }
-    }
-
-    private void updateUserInterface() {
-        if (number + 1 < questionBank.getLength()) {
-            if (!userSelection.containsKey(questionBank.getId(number + 1))) {
-                radioGroupSingleChoice.clearCheck();
-                for (int i = 0; i < radioGroupSingleChoice.getChildCount(); i++) {
-                    radioGroupSingleChoice.getChildAt(i).setEnabled(true);
-                }
-                answer.setVisibility(View.INVISIBLE);
-            }
-        }
-        number++;
-        clickCounter = 0;
     }
 
     private void showAnswer() {
@@ -321,7 +296,7 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
                 }
             }
 
-            correctAnswer = questionBank.getCorrectAnswer(number);
+            String correctAnswer = questionBank.getCorrectAnswer(number);
             answer.setText(correctAnswer);
             answer.setVisibility(View.VISIBLE);
 
@@ -357,6 +332,21 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
         }
     }
 
+
+    private void updateUserInterface() {
+        if (number + 1 < questionBank.getLength()) {
+            if (!userSelection.containsKey(questionBank.getId(number + 1))) {
+                radioGroupSingleChoice.clearCheck();
+                for (int i = 0; i < radioGroupSingleChoice.getChildCount(); i++) {
+                    radioGroupSingleChoice.getChildAt(i).setEnabled(true);
+                }
+                answer.setVisibility(View.INVISIBLE);
+            }
+        }
+        number++;
+        clickCounter = 0;
+    }
+
     @OnClick(R.id.bt_next)
     void nextQuestion() {
         if ((clickCounter == 0 && !userSelection.containsKey(questionBank.getId(number)))) {
@@ -382,6 +372,27 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
             clickCounter = 0;
             showAnswer();
         }
+    }
+
+    private void checkIfQuestionIsInFavorites() {
+        if (questionBank.getLength() > 0) {
+            if (isInFavorites(questionBank.getId(number)) == 1) {
+                favorite.setIcon(R.drawable.ic_star_black_24dp);
+            } else {
+                favorite.setIcon(R.drawable
+                        .ic_star_border_black_24dp);
+            }
+        }
+    }
+
+    private int isInFavorites(int id) {
+        ContentResolver resolver = getActivity().getContentResolver();
+
+        Cursor cursor = resolver.query(QuestionContract.URI_QUESTIONS,
+                null, QuestionContract.QuestionColumns._ID + " = ? AND " + QuestionContract.QuestionColumns.FAVORITE + " = 1",
+                new String[]{"" + id}, null);
+        cursor.close();
+        return cursor.getCount();
     }
 
     private void addToFavorites() {
@@ -444,15 +455,5 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
         super.onSaveInstanceState(outState);
         outState.putParcelable(getString(R.string.key_question_bank), questionBank);
         outState.putInt(getString(R.string.key_question_number), number);
-    }
-
-    private int isInFavorites(int id) {
-        ContentResolver resolver = getActivity().getContentResolver();
-
-        Cursor cursor = resolver.query(QuestionContract.URI_QUESTIONS,
-                null, QuestionContract.QuestionColumns._ID + " = ? AND " + QuestionContract.QuestionColumns.FAVORITE + " = 1",
-                new String[]{"" + id}, null);
-        cursor.close();
-        return cursor.getCount();
     }
 }

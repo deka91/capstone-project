@@ -54,8 +54,6 @@ public class PrefsActivity extends AppCompatActivity {
                     return true;
                 }
             });
-
-
         }
     }
 

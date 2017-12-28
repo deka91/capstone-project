@@ -24,10 +24,6 @@ public class QuestionBank implements Parcelable {
         return questions.get(i).getId();
     }
 
-    public int getType(int i) {
-        return questions.get(i).getType();
-    }
-
     public int getLength() {
         return questions.size();
     }
@@ -47,7 +43,6 @@ public class QuestionBank implements Parcelable {
     public void initQuestions(QuestionDbHelper questionDbHelper) {
         questions = questionDbHelper.getAllQuestions();
     }
-
 
     @Override
     public int describeContents() {

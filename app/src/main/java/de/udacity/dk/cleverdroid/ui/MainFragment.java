@@ -42,7 +42,6 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     private int wrongQuestions, favoriteQuestions;
     private ArrayList<String> usecaseList = new ArrayList<>();
     private UsecaseAdapter usecaseAdapter;
-    private RecyclerView recyclerView;
     private Tracker tracker;
 
     public MainFragment() {
@@ -66,7 +65,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main,
                 container, false);
-        recyclerView = view.findViewById(R.id.recycler_cards);
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_cards);
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.app_name));
@@ -105,7 +104,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
                         }
                         break;
                 }
-                if (position != 3 && startQuiz == true) {
+                if (position != 3 && startQuiz) {
                     tracker.send(new HitBuilders.ScreenViewBuilder().build());
                     startActivity(intent);
                 }

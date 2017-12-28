@@ -55,7 +55,7 @@ public class ResultFragment extends Fragment {
     }
 
     @OnClick(R.id.bt_again)
-    void repeateQuestions(View view) {
+    void repeateQuestions() {
         Intent intent = new Intent(getActivity(), QuizActivity.class);
         intent.putExtra(getString(R.string.key_usecase), QuestionContract.URI_QUESTIONS.toString());
         startActivity(intent);
