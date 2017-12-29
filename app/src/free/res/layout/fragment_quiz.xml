@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="16dp"
     android:orientation="vertical"
     tools:context="de.udacity.dk.cleverdroid.ui.QuizActivity">
 
@@ -32,7 +33,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/adView"
         android:layout_centerInParent="true"
-        android:layout_margin="16dp"
         android:elevation="@dimen/cardview_default_elevation"
         card_view:cardCornerRadius="8dp">
 
@@ -108,8 +108,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_margin="16dp"
-        android:layout_toLeftOf="@+id/bt_next"
-        android:layout_toRightOf="@+id/bt_back"
+        android:layout_toLeftOf="@+id/iv_next"
+        android:layout_toRightOf="@+id/iv_back"
         android:gravity="center"
         android:padding="16dp"
         android:textColor="@android:color/white"
@@ -118,26 +118,24 @@
         tools:textColor="@android:color/black" />
 
     <ImageView
-        android:id="@+id/bt_back"
+        android:id="@+id/iv_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_margin="16dp"
         android:background="@drawable/circle_background"
         android:src="@drawable/ic_keyboard_arrow_left_black_24dp"
         android:text="@string/quiz_back"
         android:textColor="@android:color/white" />
 
     <ImageView
-        android:id="@+id/bt_next"
+        android:id="@+id/iv_next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_margin="16dp"
         android:background="@drawable/circle_background"
         android:src="@drawable/ic_keyboard_arrow_right_black_24dp"
         android:text="@string/quiz_next"

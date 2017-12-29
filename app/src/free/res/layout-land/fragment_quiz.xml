@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:layout_margin="16dp"
     tools:context="de.udacity.dk.cleverdroid.ui.QuizActivity">
 
     <TextView
@@ -14,7 +14,8 @@
         android:layout_alignParentTop="true"
         android:gravity="center"
         android:text="@string/quiz_title"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline" />
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
+        android:visibility="gone" />
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"
@@ -22,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_question_number"
         android:layout_centerHorizontal="true"
-        android:layout_margin="16dp"
+        android:visibility="gone"
         ads:adSize="BANNER"
         ads:adUnitId="ca-app-pub-3940256099942544/5224354917" />
 
@@ -30,9 +31,8 @@
         android:id="@+id/question_and_answers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/adView"
-        android:layout_centerInParent="true"
-        android:layout_margin="16dp"
+        android:layout_above="@id/iv_back"
+        android:layout_alignParentTop="true"
         android:elevation="@dimen/cardview_default_elevation"
         card_view:cardCornerRadius="8dp">
 
@@ -66,35 +66,41 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:weightSum="4">
 
                 <RadioGroup
                     android:id="@+id/rg_singlechoice"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4">
 
                     <RadioButton
                         android:id="@+id/rb_choice1"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
                         tools:text="Android" />
 
                     <RadioButton
                         android:id="@+id/rb_choice2"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
                         tools:text="Android" />
 
                     <RadioButton
                         android:id="@+id/rb_choice3"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
                         tools:text="Android" />
 
                     <RadioButton
                         android:id="@+id/rb_choice4"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
                         tools:text="Android" />
                 </RadioGroup>
             </LinearLayout>
@@ -108,8 +114,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_margin="16dp"
-        android:layout_toLeftOf="@+id/bt_next"
-        android:layout_toRightOf="@+id/bt_back"
+        android:layout_toLeftOf="@+id/iv_next"
+        android:layout_toRightOf="@+id/iv_back"
         android:gravity="center"
         android:padding="16dp"
         android:textColor="@android:color/white"
@@ -118,26 +124,26 @@
         tools:textColor="@android:color/black" />
 
     <ImageView
-        android:id="@+id/bt_back"
+        android:id="@+id/iv_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_margin="16dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/circle_background"
         android:src="@drawable/ic_keyboard_arrow_left_black_24dp"
         android:text="@string/quiz_back"
         android:textColor="@android:color/white" />
 
     <ImageView
-        android:id="@+id/bt_next"
+        android:id="@+id/iv_next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_margin="16dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/circle_background"
         android:src="@drawable/ic_keyboard_arrow_right_black_24dp"
         android:text="@string/quiz_next"

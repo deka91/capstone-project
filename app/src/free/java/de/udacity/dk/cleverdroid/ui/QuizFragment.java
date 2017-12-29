@@ -3,6 +3,7 @@ package de.udacity.dk.cleverdroid.ui;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -126,6 +127,11 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .build();
         banner.loadAd(adRequest);
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            questionNumber.setVisibility(View.GONE);
+            banner.setVisibility(View.GONE);
+        }
 
         return view;
     }
@@ -350,7 +356,7 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
         clickCounter = 0;
     }
 
-    @OnClick(R.id.bt_next)
+    @OnClick(R.id.iv_next)
     void nextQuestion() {
         if ((clickCounter == 0 && !userSelection.containsKey(questionBank.getId(number)))) {
             if (radioGroupSingleChoice.getCheckedRadioButtonId() == -1) {
@@ -367,7 +373,7 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
         }
     }
 
-    @OnClick(R.id.bt_back)
+    @OnClick(R.id.iv_back)
     void previousQuestion() {
         if (number != 0) {
             number = number - 1;
