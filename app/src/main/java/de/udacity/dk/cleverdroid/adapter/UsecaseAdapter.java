@@ -53,10 +53,10 @@ public class UsecaseAdapter extends RecyclerView.Adapter<UsecaseAdapter.MyViewHo
 
             itemView.setLayoutParams(new RecyclerView.LayoutParams(width, height));
         } else {
-//            int height = parent.getMeasuredHeight() / 2;
-//            int width = parent.getMeasuredWidth();
-//
-//            itemView.setLayoutParams(new RecyclerView.LayoutParams(width, height));
+            int height = parent.getMeasuredHeight() / 2;
+            int width = parent.getMeasuredWidth() / 2;
+
+            itemView.setLayoutParams(new RecyclerView.LayoutParams(width, height));
         }
 
         return new MyViewHolder(itemView, listener);
