@@ -13,47 +13,47 @@
         android:id="@+id/tv_start"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="@dimen/widget_margin"
         android:layout_weight="1"
         android:contentDescription="@string/widget_start"
         android:gravity="center"
         android:text="@string/widget_start"
         android:textColor="#ffffff"
-        android:textSize="18sp" />
+        android:textSize="@dimen/widget_text" />
 
     <TextView
         android:id="@+id/tv_repeat"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="@dimen/widget_margin"
         android:layout_weight="1"
         android:contentDescription="@string/widget_repeat"
         android:gravity="center"
         android:text="@string/widget_repeat"
         android:textColor="#ffffff"
-        android:textSize="18sp" />
+        android:textSize="@dimen/widget_text" />
 
     <TextView
         android:id="@+id/tv_favorites"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="@dimen/widget_margin"
         android:layout_weight="1"
         android:contentDescription="@string/widget_favorites"
         android:gravity="center"
         android:text="@string/widget_favorites"
         android:textColor="#ffffff"
-        android:textSize="18sp" />
+        android:textSize="@dimen/widget_text" />
 
     <TextView
         android:id="@+id/tv_score"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="@dimen/widget_margin"
         android:layout_weight="1"
         android:gravity="center"
         android:textColor="#ffffff"
-        android:textSize="18sp"
+        android:textSize="@dimen/widget_text"
         tools:text="20/50" />
 
 </LinearLayout>
