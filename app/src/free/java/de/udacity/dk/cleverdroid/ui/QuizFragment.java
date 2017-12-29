@@ -89,10 +89,6 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            if (savedInstanceState.getSerializable(getString(R.string.key_user_selection)) != null) {
-                userSelection = (HashMap<Integer, Integer>) savedInstanceState.getSerializable(getString(R.string.key_user_selection));
-            }
-
             if (savedInstanceState.getParcelable(getString(R.string.key_question_bank)) != null) {
                 questionBank = savedInstanceState.getParcelable(getString(R.string.key_question_bank));
             }
@@ -100,13 +96,32 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
             if (savedInstanceState.getInt(getString(R.string.key_question_number)) != 0) {
                 number = savedInstanceState.getInt(getString(R.string.key_question_number));
             }
+
+            if (savedInstanceState.getInt(getString(R.string.key_score)) != 0) {
+                score = savedInstanceState.getInt(getString(R.string.key_score));
+            }
         } else {
             questionBank = new QuestionBank();
-            userSelection = new HashMap<>();
         }
 
         getActivity().getSupportLoaderManager().initLoader(LOADER_ID, null, this);
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            if (savedInstanceState.getSerializable(getString(R.string.key_user_selection)) != null) {
+                userSelection = (HashMap<Integer, Integer>) savedInstanceState.getSerializable(getString(R.string.key_user_selection));
+                updateQuestion();
+                if (userSelection.containsKey(questionBank.getId(number))) {
+                    showAnswer();
+                }
+            }
+        } else {
+            userSelection = new HashMap<>();
+        }
     }
 
     @Override
@@ -465,5 +480,6 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
         outState.putSerializable(getString(R.string.key_user_selection), userSelection);
         outState.putParcelable(getString(R.string.key_question_bank), questionBank);
         outState.putInt(getString(R.string.key_question_number), number);
+        outState.putInt(getString(R.string.key_score), score);
     }
 }

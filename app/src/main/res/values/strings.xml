@@ -27,12 +27,12 @@
     <string name="key_usecase" translatable="false">usecase</string>
     <string name="key_score" translatable="false">score</string>
     <string name="key_questions_amount" translatable="false">questions_amount</string>
-    <string name="key_progress">progress</string>
-    <string name="key_favorites">favorites</string>
-    <string name="key_uri">uri</string>
-    <string name="key_question_bank">question_bank</string>
-    <string name="key_question_number">question_number</string>
-    <string name="key_user_selection">user_selection</string>
+    <string name="key_progress" translatable="false">progress</string>
+    <string name="key_favorites" translatable="false">favorites</string>
+    <string name="key_uri" translatable="false">uri</string>
+    <string name="key_question_bank" translatable="false">question_bank</string>
+    <string name="key_question_number" translatable="false">question_number</string>
+    <string name="key_user_selection" translatable="false">user_selection</string>
 
     <!-- Widget -->
     <string name="widget_start">Start</string>
