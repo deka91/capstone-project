@@ -5,13 +5,14 @@
     android:background="@color/colorBackground"
     android:orientation="vertical">
 
-    <include layout="@layout/app_bar"></include>
+    <include
+        android:id="@+id/app_bar"
+        layout="@layout/app_bar" />
 
     <FrameLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/appbar"
- />
+        android:layout_below="@+id/app_bar" />
 
 </RelativeLayout>

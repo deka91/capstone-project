@@ -72,7 +72,7 @@
                 <RadioGroup
                     android:id="@+id/rg_singlechoice"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_weight="4">
 
                     <RadioButton
@@ -114,8 +114,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_margin="16dp"
+        android:layout_toEndOf="@+id/iv_back"
         android:layout_toLeftOf="@+id/iv_next"
         android:layout_toRightOf="@+id/iv_back"
+        android:layout_toStartOf="@+id/iv_next"
         android:gravity="center"
         android:padding="16dp"
         android:textColor="@android:color/white"
@@ -132,6 +134,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="8dp"
         android:background="@drawable/circle_background"
+        android:contentDescription="@string/content_description_back"
         android:src="@drawable/ic_keyboard_arrow_left_black_24dp"
         android:text="@string/quiz_back"
         android:textColor="@android:color/white" />
@@ -145,6 +148,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginTop="8dp"
         android:background="@drawable/circle_background"
+        android:contentDescription="@string/content_description_next"
         android:src="@drawable/ic_keyboard_arrow_right_black_24dp"
         android:text="@string/quiz_next"
         android:textColor="@android:color/white" />
