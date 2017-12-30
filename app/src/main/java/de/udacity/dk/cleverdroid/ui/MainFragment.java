@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -19,7 +20,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -90,7 +90,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
                         tracker.setScreenName(Constants.SCREEN_QUESTIONS_WRONG);
                         if (wrongQuestions == 0) {
                             startQuiz = false;
-                            Toast.makeText(getContext(), getString(R.string.main_no_wrong_questions), Toast.LENGTH_SHORT).show();
+                            showSnackbar(getActivity().findViewById(R.id.layout_main), getString(R.string.main_no_wrong_questions), Snackbar.LENGTH_SHORT);
                         }
                         break;
                     case 2:
@@ -100,7 +100,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
                         tracker.setScreenName(Constants.SCREEN_QUESTIONS_FAVORITE);
                         if (favoriteQuestions == 0) {
                             startQuiz = false;
-                            Toast.makeText(getContext(), getString(R.string.main_no_favorites), Toast.LENGTH_SHORT).show();
+                            showSnackbar(getActivity().findViewById(R.id.layout_main), getString(R.string.main_no_favorites), Snackbar.LENGTH_SHORT);
                         }
                         break;
                 }
@@ -277,7 +277,6 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
             default:
                 return null;
-
         }
     }
 
@@ -303,5 +302,20 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    public void showSnackbar(View view, String message, int duration) {
+        // Create snackbar
+        final Snackbar snackbar = Snackbar.make(view, message, duration);
+
+        // Set an action on it, and a handler
+        snackbar.setAction(getString(R.string.main_snackbar_dismiss), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackbar.dismiss();
+            }
+        });
+
+        snackbar.show();
     }
 }

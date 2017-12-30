@@ -30,6 +30,7 @@
     <string name="about_licenses_sqlite">SQLiteAssetHelper</string>
     <string name="content_description_back">By clicking on this image you will get to the previous question.</string>
     <string name="content_description_next">By clicking on this image you will get to the next question.</string>
+    <string name="main_snackbar_dismiss">DISMISS</string>
 
     <!-- Keys -->
     <string name="key_usecase" translatable="false">usecase</string>
