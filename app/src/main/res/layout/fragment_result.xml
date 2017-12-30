@@ -17,16 +17,16 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/result_title"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline" />
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1" />
 
         <TextView
             android:id="@+id/tv_score"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Display4"
+            android:textColor="@color/correctBackground"
             tools:text="11/20" />
-
     </LinearLayout>
 
 
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/rounded_button"
         android:text="@string/result_try_again"
         android:textColor="@android:color/white" />
 
