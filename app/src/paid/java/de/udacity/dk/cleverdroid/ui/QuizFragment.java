@@ -162,19 +162,17 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
-        if (questionBank.getLength() != 0) {
-            favorite = menu.findItem(R.id.action_favorite);
-            favorite.setVisible(true);
-            favorite.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem menuItem) {
-                    addToFavorites();
-                    return true;
-                }
-            });
+        favorite = menu.findItem(R.id.action_favorite);
+        favorite.setVisible(true);
+        favorite.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                addToFavorites();
+                return true;
+            }
+        });
 
-            checkIfQuestionIsInFavorites();
-        }
+        checkIfQuestionIsInFavorites();
 
     }
 
@@ -238,6 +236,7 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
         if (questionBank != null && questionBank.getLength() == 0) {
             questionBank.initQuestions(questionDbHelper);
         }
+
         updateQuestion();
     }
 
@@ -277,6 +276,7 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
             next.setVisibility(View.INVISIBLE);
             questionsAnswers.setVisibility(View.INVISIBLE);
             noQuestionsMessage.setVisibility(View.VISIBLE);
+            setHasOptionsMenu(false);
         }
     }
 
