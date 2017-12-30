@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="16dp"
+    android:layout_margin="@dimen/default_margin"
     tools:context="de.udacity.dk.cleverdroid.ui.QuizActivity">
 
     <TextView
@@ -34,7 +34,7 @@
         android:layout_above="@id/iv_back"
         android:layout_alignParentTop="true"
         android:elevation="@dimen/cardview_default_elevation"
-        card_view:cardCornerRadius="8dp">
+        card_view:cardCornerRadius="@dimen/cardview_corner_radius">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,7 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:padding="16dp">
+                android:padding="@dimen/default_padding">
 
                 <TextView
                     android:id="@+id/tv_question"
@@ -66,7 +66,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:padding="16dp"
+                android:padding="@dimen/default_padding"
                 android:weightSum="4">
 
                 <RadioGroup
@@ -113,13 +113,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/default_margin"
         android:layout_toEndOf="@+id/iv_back"
         android:layout_toLeftOf="@+id/iv_next"
         android:layout_toRightOf="@+id/iv_back"
         android:layout_toStartOf="@+id/iv_next"
         android:gravity="center"
-        android:padding="16dp"
+        android:padding="@dimen/default_padding"
         android:textColor="@android:color/white"
         android:textStyle="bold"
         tools:text="This is the answer"
@@ -132,7 +132,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/landscape_imageview_margin_top"
         android:background="@drawable/circle_background"
         android:contentDescription="@string/content_description_back"
         android:src="@drawable/ic_keyboard_arrow_left_black_24dp"
@@ -146,7 +146,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/landscape_imageview_margin_top"
         android:background="@drawable/circle_background"
         android:contentDescription="@string/content_description_next"
         android:src="@drawable/ic_keyboard_arrow_right_black_24dp"
