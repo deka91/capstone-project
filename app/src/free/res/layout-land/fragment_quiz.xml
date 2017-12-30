@@ -44,6 +44,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
                 android:gravity="center_vertical"
                 android:padding="@dimen/default_padding">
 
@@ -51,6 +52,7 @@
                     android:id="@+id/tv_question"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
                     android:textStyle="bold"
                     tools:text="This is a question" />
 
@@ -58,8 +60,8 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@android:color/darker_gray" />
+                android:layout_height="1dp"
+                android:background="@color/colorPrimary" />
 
             <LinearLayout
                 android:id="@+id/layout_singlechoice"
