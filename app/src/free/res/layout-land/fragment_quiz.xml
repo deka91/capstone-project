@@ -155,4 +155,14 @@
         android:text="@string/quiz_next"
         android:textColor="@android:color/white" />
 
+    <TextView
+        android:id="@+id/tv_no_questions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="@string/quiz_no_questions"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:visibility="gone" />
+
 </RelativeLayout>

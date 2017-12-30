@@ -11,6 +11,7 @@
     <string name="quiz_next">Next</string>
     <string name="quiz_back">Back</string>
     <string name="quiz_info_message">Please answer the question.</string>
+    <string name="quiz_no_questions">There are no questions in this section.</string>
     <string name="result_screen">Result</string>
     <string name="settings_screen">Settings</string>
     <string name="about_screen">About</string>

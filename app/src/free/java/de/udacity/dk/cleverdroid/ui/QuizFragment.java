@@ -14,6 +14,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,6 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -61,6 +63,9 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
     @BindView(R.id.tv_answer)
     TextView answer;
 
+    @BindView(R.id.tv_no_questions)
+    TextView noQuestionsMessage;
+
     @BindView(R.id.layout_singlechoice)
     LinearLayout singleChoiceLayout;
 
@@ -81,6 +86,15 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @BindView(R.id.adView)
     AdView banner;
+
+    @BindView(R.id.iv_back)
+    ImageView back;
+
+    @BindView(R.id.iv_next)
+    ImageView next;
+
+    @BindView(R.id.question_and_answers)
+    CardView questionsAnswers;
 
     public QuizFragment() {
     }
@@ -115,7 +129,7 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
             if (savedInstanceState.getSerializable(getString(R.string.key_user_selection)) != null) {
                 userSelection = (HashMap<Integer, Integer>) savedInstanceState.getSerializable(getString(R.string.key_user_selection));
                 updateQuestion();
-                if (userSelection.containsKey(questionBank.getId(number))) {
+                if (questionBank.getLength() != 0 && userSelection.containsKey(questionBank.getId(number))) {
                     showAnswer();
                 }
             }
@@ -160,16 +174,20 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
-        favorite = menu.findItem(R.id.action_favorite);
-        favorite.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                addToFavorites();
-                return true;
-            }
-        });
+        if (questionBank.getLength() != 0) {
+            favorite = menu.findItem(R.id.action_favorite);
+            favorite.setVisible(true);
+            favorite.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    addToFavorites();
+                    return true;
+                }
+            });
 
-        checkIfQuestionIsInFavorites();
+            checkIfQuestionIsInFavorites();
+        }
+
     }
 
     @Override
@@ -263,6 +281,14 @@ public class QuizFragment extends Fragment implements LoaderManager.LoaderCallba
 
             getActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, resultFragment).commit();
+        } else {
+            // no favorite or wrong questions available after clicking on the widget
+            questionNumber.setVisibility(View.INVISIBLE);
+            question.setVisibility(View.INVISIBLE);
+            back.setVisibility(View.INVISIBLE);
+            next.setVisibility(View.INVISIBLE);
+            questionsAnswers.setVisibility(View.INVISIBLE);
+            noQuestionsMessage.setVisibility(View.VISIBLE);
         }
     }
 
