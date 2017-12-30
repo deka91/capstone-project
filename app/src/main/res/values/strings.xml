@@ -26,9 +26,9 @@
     <string name="about_version_title">Version</string>
     <string name="about_developer_title">Developer</string>
     <string name="about_developer_content">Deniz Kalem</string>
-    <string name="about_licenses_title">Licenses</string>
-    <string name="about_licenses_butterknife">Butterknife</string>
-    <string name="about_licenses_sqlite">SQLiteAssetHelper</string>
+    <string name="about_licences_title">Licences</string>
+    <string name="about_licences_butterknife">Butterknife</string>
+    <string name="about_licences_sqlite">SQLiteAssetHelper</string>
     <string name="content_description_back">By clicking on this image you will get to the previous question.</string>
     <string name="content_description_next">By clicking on this image you will get to the next question.</string>
     <string name="main_snackbar_dismiss">DISMISS</string>

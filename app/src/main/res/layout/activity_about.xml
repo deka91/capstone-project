@@ -72,20 +72,20 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/about_licenses_title"
+            android:text="@string/about_licences_title"
             android:textColor="@android:color/black"
             android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/about_licenses_butterknife"
+            android:text="@string/about_licences_butterknife"
             android:textColor="@android:color/black" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/about_licenses_sqlite"
+            android:text="@string/about_licences_sqlite"
             android:textColor="@android:color/black" />
     </LinearLayout>
 
