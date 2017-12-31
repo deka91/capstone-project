@@ -72,5 +72,10 @@ public class UsecaseAdapter extends RecyclerView.Adapter<UsecaseAdapter.MyViewHo
     public int getItemCount() {
         return usecaseList.size();
     }
+
+    public void replaceItem(String item, int position) {
+        usecaseList.set(position, item);
+        notifyItemChanged(position);
+    }
 }
 

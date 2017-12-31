@@ -285,10 +285,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         switch (loader.getId()) {
             case SCORE_LOADER:
                 Log.i(TAG, "The current score is: " + data.getCount() + "/" + Constants.TOTAL_QUESTIONS);
-                usecaseList.remove(3);
-                usecaseAdapter.notifyItemRemoved(3);
-                usecaseList.add(data.getCount() + "/" + Constants.TOTAL_QUESTIONS);
-                usecaseAdapter.notifyItemInserted(3);
+                usecaseAdapter.replaceItem(data.getCount() + "/" + Constants.TOTAL_QUESTIONS, 3);
                 break;
             case WRONG_QUESTIONS_LOADER:
                 wrongQuestions = data.getCount();
