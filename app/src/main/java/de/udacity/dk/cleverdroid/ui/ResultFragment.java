@@ -32,7 +32,6 @@ public class ResultFragment extends Fragment {
     private String uriString;
     private boolean wrongQuestionsAvailable;
     private boolean favoriteQuestionsAvailable;
-    private Intent intent;
 
     public ResultFragment() {
     }
@@ -96,7 +95,7 @@ public class ResultFragment extends Fragment {
 
     @OnClick(R.id.bt_again)
     void repeateQuestions() {
-        intent = new Intent(getActivity(), QuizActivity.class);
+        Intent intent = new Intent(getActivity(), QuizActivity.class);
         if (uriString.equals(QuestionContract.URI_QUESTIONS.toString())) {
             intent.putExtra(getString(R.string.key_usecase), QuestionContract.URI_QUESTIONS.toString());
         } else if (uriString.equals(QuestionContract.URI_QUESTIONS_WRONG.toString())) {

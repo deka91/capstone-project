@@ -24,6 +24,7 @@
         <activity android:name=".ui.PrefsActivity" />
         <activity android:name=".ui.QuizActivity" />
         <activity android:name=".ui.AboutActivity" />
+        <activity android:name=".ui.ResultActivity" />
 
         <provider
             android:name=".database.QuestionContentProvider"

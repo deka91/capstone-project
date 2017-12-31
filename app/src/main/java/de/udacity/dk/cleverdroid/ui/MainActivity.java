@@ -24,8 +24,10 @@ public class MainActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setHomeButtonEnabled(false);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
 
         if (findViewById(R.id.fragment_container) != null) {
 

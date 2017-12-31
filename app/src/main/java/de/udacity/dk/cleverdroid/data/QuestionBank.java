@@ -58,7 +58,7 @@ public class QuestionBank implements Parcelable {
     }
 
     protected QuestionBank(Parcel in) {
-        this.questions = new ArrayList<Question>();
+        this.questions = new ArrayList<>();
         in.readList(this.questions, Question.class.getClassLoader());
     }
 

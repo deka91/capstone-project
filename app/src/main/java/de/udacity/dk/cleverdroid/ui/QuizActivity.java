@@ -27,11 +27,11 @@ public class QuizActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         Intent intent = getIntent();
-
-
         android.support.v4.app.Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 
         if (fragment == null && intent != null && intent.getStringExtra(getString(R.string.key_usecase)) != null) {
@@ -43,7 +43,6 @@ public class QuizActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, quizFragment).commit();
         }
-
     }
 
     @Override
